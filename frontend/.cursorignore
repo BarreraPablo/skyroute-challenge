@@ -1,0 +1,9 @@
+# Node.js
+node_modules/
+nist/
+nangular/
+noverage/
+
+# Misc
+.git/
+*.log

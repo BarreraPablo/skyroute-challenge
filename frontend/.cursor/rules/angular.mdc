@@ -1,0 +1,17 @@
+---
+Description: Core Architecture and UI Rules for Angular
+Globs: src/app/**/*.ts, src/app/**/*.html, src/app/**/*.scss
+---
+# Angular Frontend Guidelines
+
+## 1. Basic Architecture
+- ALWAYS use `Standalone Components`. Do not create `app.module.ts` files or use `@NgModule`.
+- Separate components into Smart (handle state and services) and Presentational (only UI with `@Input`/`@Output`).
+
+## 2. Reactivity and State
+- Prioritize **Angular Signals** (`signal`, `computed`) for local state.
+- Use observables for HTTP flows. Consume them in the HTML with the `async` pipe. Avoid manual `.subscribe()` in components.
+
+## 3. Styles
+- Use SCSS. No inline styles.
+- Extract colors and spacing from `_variables.scss`. Do not use hardcoded values ​​in components. 

@@ -1,0 +1,7 @@
+# Context: SkyRoute Travel Platform (Backend)
+
+Act as a Senior .NET 10 Developer.
+
+- Architecture: Vertical Slice Architecture using direct services (Explicit orchestration). Do NOT use MediatR. Use standard service classes for reference data.
+- The SkyRoute.Contracts project must only contain DTOs (records) and have no dependencies on EF Core or the API.
+- Strict and direct responses. Only generate the requested code.

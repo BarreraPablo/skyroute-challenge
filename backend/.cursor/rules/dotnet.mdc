@@ -1,0 +1,18 @@
+---
+Description: Core architecture rules and best practices for .NET
+Globs: src/**/*.cs, tests/**/*.cs
+---
+# .NET Backend Guidelines
+
+## 1. Code Conventions
+- Typing: Use `var` in variable declaration when is possible.
+- Flow Control: Use `early returns` to validate parameters.
+- Models: Use `record` for DTOs in the `Contracts` project.
+
+## 2. Asynchronicity and Dependencies
+- All I/O operations must be `async/await` and pass the `CancellationToken`. Never use `.Result`.
+- Use dependency injection and inject dependencies into the constructor of the controller.
+
+## 3. Entity Framework Core and Data
+- Use the Fluent API (`IEntityTypeConfiguration`) instead of Data Annotations.
+- Do not catch `Exception` to silence it. Assume a global exception handling middleware.
