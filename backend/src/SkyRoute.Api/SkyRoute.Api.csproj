@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
+    <ProjectReference Include="..\SkyRoute.Contracts\SkyRoute.Contracts.csproj" />
+    <ProjectReference Include="..\SkyRoute.Core\SkyRoute.Core.csproj" />
+    <ProjectReference Include="..\SkyRoute.Infrastructure\SkyRoute.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
