@@ -1,36 +1,125 @@
-<section class="booking-panel">
-  <div>
+@if (hasSelection()) {
+  <section class="booking-layout" [class.booking-layout--locked]="bookingCompleted()">
+    <div class="booking-summary">
+      <p class="section-label">Booking</p>
+      <h2>Confirm the selected flight.</h2>
+      <p class="section-copy">
+        Review the itinerary, total price, and passenger details before confirming your booking.
+      </p>
+
+      @if (selectedFlight(); as flight) {
+        <div class="summary-card">
+          <div class="summary-row">
+            <span>Route</span>
+            <strong>{{ formatAirportLabel(flight.originName, flight.originCountry, flight.originCode) }} to {{ formatAirportLabel(flight.destinationName, flight.destinationCountry, flight.destinationCode) }}</strong>
+          </div>
+          <div class="summary-row">
+            <span>Provider</span>
+            <strong>{{ flight.providerName }}</strong>
+          </div>
+          <div class="summary-row">
+            <span>Departure</span>
+            <strong>{{ formatDateTime(flight.departureTimeUtc) }}</strong>
+          </div>
+          <div class="summary-row">
+            <span>Arrival</span>
+            <strong>{{ formatDateTime(flight.arrivalTimeUtc) }}</strong>
+          </div>
+          <div class="summary-row">
+            <span>Cabin class</span>
+            <strong>{{ flight.cabinClass }}</strong>
+          </div>
+        </div>
+
+        <div class="summary-card summary-card--accent">
+          <div class="summary-row">
+            <span>Price per passenger</span>
+            <strong>{{ formatCurrency(pricePerPassenger()) }}</strong>
+          </div>
+          <div class="summary-row">
+            <span>Passengers</span>
+            <strong>{{ passengerCount() }}</strong>
+          </div>
+          <div class="summary-row summary-row--total">
+            <span>Total</span>
+            <strong>{{ formatCurrency(totalPrice()) }}</strong>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="booking-form-panel">
+      <form class="booking-form" [formGroup]="bookingForm" (ngSubmit)="submit()">
+        <label>
+          Full name
+          <input type="text" formControlName="fullName" placeholder="Enter passenger full name">
+          @if (fullNameError(); as error) {
+            <span class="field-error">{{ error }}</span>
+          }
+        </label>
+
+        <label>
+          Email address
+          <input type="email" formControlName="email" placeholder="name@example.com">
+          @if (emailError(); as error) {
+            <span class="field-error">{{ error }}</span>
+          }
+        </label>
+
+        <label>
+          {{ documentLabel() }}
+          <input type="text" formControlName="documentNumber" [placeholder]="documentLabel()">
+          <span class="field-hint">{{ documentGuidance() }}</span>
+          @if (documentNumberError(); as error) {
+            <span class="field-error">{{ error }}</span>
+          }
+        </label>
+
+        @if (errorMessage()) {
+          <div class="status-message status-message--error">{{ errorMessage() }}</div>
+        }
+
+        @if (bookingReference()) {
+          <div class="status-message status-message--success">
+            Booking confirmed. Reference code: <strong>{{ bookingReference() }}</strong>
+          </div>
+        }
+
+        <div class="form-actions">
+          <button type="submit" [disabled]="!canSubmit">
+            {{ submitting() ? 'Confirming...' : bookingCompleted() ? 'Confirmed' : 'Confirm Booking' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    @if (bookingCompleted()) {
+      <div class="booking-modal-backdrop" role="presentation">
+        <section class="booking-modal" role="dialog" aria-modal="true" aria-labelledby="booking-confirmation-title">
+          <p class="section-label">Booking confirmed</p>
+          <h2 id="booking-confirmation-title">Your booking was created successfully.</h2>
+          <p class="section-copy">
+            Reference code
+            <strong>{{ bookingReference() }}</strong>
+          </p>
+          <p class="section-copy booking-modal__copy">
+            Return to search to start a new booking.
+          </p>
+
+          <div class="booking-modal__actions">
+            <button type="button" (click)="returnToSearch()">Back to search</button>
+          </div>
+        </section>
+      </div>
+    }
+  </section>
+} @else {
+  <section class="booking-empty-state">
     <p class="section-label">Booking</p>
-    <h2>Capture passenger details.</h2>
+    <h2>Select a flight first.</h2>
     <p class="section-copy">
-      This route is ready for the booking flow and can evolve into a passenger-aware confirmation screen.
+      Bookings are created from a flight selected in search results so the summary and pricing stay in sync.
     </p>
-  </div>
-
-  <form class="booking-form" [formGroup]="bookingForm" (ngSubmit)="submit()">
-    <label>
-      First name
-      <input type="text" formControlName="firstName">
-    </label>
-
-    <label>
-      Last name
-      <input type="text" formControlName="lastName">
-    </label>
-
-    <label>
-      Document type
-      <select formControlName="documentType">
-        <option value="Passport">Passport</option>
-        <option value="NationalId">National ID</option>
-      </select>
-    </label>
-
-    <label>
-      Document number
-      <input type="text" formControlName="documentNumber">
-    </label>
-
-    <button type="submit">Continue</button>
-  </form>
-</section>
+    <button type="button" routerLink="/">Go to search</button>
+  </section>
+}

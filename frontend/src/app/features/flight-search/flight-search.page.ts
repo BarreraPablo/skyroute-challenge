@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { BookingSelection } from '../../core/models/booking-selection.model';
+import { BookingSelectionService } from '../../core/services/booking-selection.service';
 import { FlightApiService, FlightSearchResult } from '../../core/services/flight-api.service';
 import { Airport } from '../../core/models/airport.model';
 
@@ -17,6 +20,8 @@ type FlightSortOrder = 'priceAsc' | 'priceDesc' | 'durationAsc' | 'departureAsc'
 export class FlightSearchPage {
   private readonly fb = inject(FormBuilder).nonNullable;
   private readonly flightApiService = inject(FlightApiService);
+  private readonly bookingSelectionService = inject(BookingSelectionService);
+  private readonly router = inject(Router);
 
   readonly airports = signal<Airport[]>([]);
   readonly sortOrder = signal<FlightSortOrder>('priceAsc');
@@ -57,6 +62,42 @@ export class FlightSearchPage {
 
   onSortOrderChange(order: FlightSortOrder): void {
     this.sortOrder.set(order);
+  }
+
+  formatAirportLabel(airport: Airport): string {
+    return this.formatAirportLabelParts(airport.name, airport.country, airport.code);
+  }
+
+  selectFlight(flight: FlightSearchResult): void {
+    const formValue = this.filters.getRawValue();
+    const originAirport = this.airports().find((airport) => airport.code === formValue.origin);
+    const destinationAirport = this.airports().find((airport) => airport.code === formValue.destination);
+
+    if (!originAirport || !destinationAirport) {
+      return;
+    }
+
+    const selection: BookingSelection = {
+      flightId: flight.flightId,
+      providerName: flight.providerName,
+      originCode: flight.originCode,
+      originName: originAirport.name,
+      originCountry: originAirport.country,
+      originCountryCode: originAirport.countryCode,
+      destinationCode: flight.destinationCode,
+      destinationName: destinationAirport.name,
+      destinationCountry: destinationAirport.country,
+      destinationCountryCode: destinationAirport.countryCode,
+      departureTimeUtc: flight.departureTimeUtc,
+      arrivalTimeUtc: flight.arrivalTimeUtc,
+      cabinClass: flight.cabinClass,
+      pricePerPassenger: flight.pricePerPassenger,
+      totalPrice: flight.totalPrice,
+      passengerCount: formValue.passengers
+    };
+
+    this.bookingSelectionService.setSelection(selection);
+    void this.router.navigate(['/booking']);
   }
 
   async ngOnInit(): Promise<void> {
@@ -142,5 +183,15 @@ export class FlightSearchPage {
           return new Date(left.departureTimeUtc).getTime() - new Date(right.departureTimeUtc).getTime();
       }
     });
+  }
+
+  private formatAirportLabelParts(name: string, country: string, code: string): string {
+    const normalizedName = name.replace(new RegExp(`\s*\(\s*${code}\s*\)\s*$`, 'i'), '').trim();
+
+    if (!country) {
+      return `${normalizedName} (${code})`;
+    }
+
+    return `${normalizedName}, ${country} (${code})`;
   }
 }

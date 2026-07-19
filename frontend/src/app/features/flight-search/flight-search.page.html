@@ -3,7 +3,7 @@
     <p class="section-label">Search</p>
     <h2>Find flights and compare total trip prices.</h2>
     <p class="section-copy">
-      Choose your route, cabin class, and passenger count, then compare live fares from the backend search endpoint.
+      Choose your route, cabin class, and passenger count, then compare live fares.
     </p>
   </div>
 
@@ -13,7 +13,7 @@
       <select formControlName="origin">
         <option value="" disabled>Select an airport</option>
         @for (airport of airports(); track airport.code) {
-          <option [value]="airport.code">{{ airport.code }} - {{ airport.name }} ({{ airport.country }})</option>
+          <option [value]="airport.code">{{ formatAirportLabel(airport) }}</option>
         }
       </select>
     </label>
@@ -23,7 +23,7 @@
       <select formControlName="destination">
         <option value="" disabled>Select an airport</option>
         @for (airport of airports(); track airport.code) {
-          <option [value]="airport.code">{{ airport.code }} - {{ airport.name }} ({{ airport.country }})</option>
+          <option [value]="airport.code">{{ formatAirportLabel(airport) }}</option>
         }
       </select>
     </label>
@@ -83,6 +83,7 @@
             <th>Duration</th>
             <th>Cabin class</th>
             <th>Price</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -97,6 +98,9 @@
               <td>
                 <strong>{{ formatCurrency(flight.totalPrice) }} total</strong>
                 <span>{{ formatCurrency(flight.pricePerPassenger) }} per person</span>
+              </td>
+              <td class="table-action">
+                <button type="button" (click)="selectFlight(flight)">Book flight</button>
               </td>
             </tr>
           }

@@ -15,7 +15,7 @@ public class BookingsController : ControllerBase
         _createBookingService = createBookingService;
     }
 
-    [HttpPost("confirm")]
+    [HttpPost]
     public async Task<ActionResult<CreateBookingResponse>> ConfirmBooking(
         [FromBody] CreateBookingRequest request,
         CancellationToken cancellationToken)

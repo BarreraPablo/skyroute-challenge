@@ -1,15 +1,27 @@
 @use '../../../styles/variables' as *;
 
-.booking-panel {
+.booking-layout,
+.booking-empty-state {
   display: grid;
   gap: 24px;
-  grid-template-columns: 0.9fr 1.1fr;
+  grid-template-columns: 0.95fr 1.05fr;
   padding: 28px;
   border: 1px solid $color-border;
   border-radius: $radius-lg;
   background: $color-surface;
   backdrop-filter: blur(14px);
   box-shadow: $shadow-lg;
+}
+
+.booking-layout {
+  position: relative;
+}
+
+.booking-layout--locked .booking-summary,
+.booking-layout--locked .booking-form-panel {
+  filter: blur(1px);
+  pointer-events: none;
+  user-select: none;
 }
 
 .section-label {
@@ -32,6 +44,40 @@ h2 {
   line-height: 1.65;
 }
 
+.booking-summary,
+.booking-form-panel {
+  display: grid;
+  gap: 16px;
+}
+
+.summary-card {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  background: $color-surface-strong;
+}
+
+.summary-card--accent {
+  background: linear-gradient(180deg, rgba($color-accent, 0.1), rgba($color-accent, 0.03));
+}
+
+.summary-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.summary-row span {
+  color: $color-text-muted;
+}
+
+.summary-row--total strong {
+  font-size: 1.15rem;
+}
+
 .booking-form {
   display: grid;
   gap: 14px;
@@ -40,7 +86,7 @@ h2 {
 .booking-form label {
   display: grid;
   gap: 8px;
-  color: $color-text-muted;
+  color: $color-text;
   font-size: 0.92rem;
 }
 
@@ -53,8 +99,24 @@ h2 {
   color: $color-text;
 }
 
-.booking-form button {
+.field-hint {
+  color: $color-text-muted;
+  font-size: 0.82rem;
+}
+
+.field-error {
+  color: #dc2626;
+  font-size: 0.82rem;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
   margin-top: 6px;
+}
+
+.booking-form button {
   border: 0;
   border-radius: 999px;
   padding: 13px 18px;
@@ -63,8 +125,76 @@ h2 {
   cursor: pointer;
 }
 
+.secondary-button {
+  background: transparent;
+  color: $color-text;
+  border: 1px solid $color-border;
+}
+
+.booking-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(8px);
+  border-radius: inherit;
+}
+
+.booking-modal {
+  width: min(100%, 520px);
+  display: grid;
+  gap: 16px;
+  padding: 28px;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  background: $color-surface;
+  box-shadow: $shadow-lg;
+}
+
+.booking-modal__copy {
+  margin-top: 0;
+}
+
+.booking-modal__actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.booking-modal__actions button {
+  border: 0;
+  border-radius: 999px;
+  padding: 13px 18px;
+  color: white;
+  background: linear-gradient(135deg, $color-accent, #c2410c);
+  cursor: pointer;
+}
+
+.status-message {
+  padding: 14px 16px;
+  border-radius: $radius-sm;
+  background: rgba($color-accent, 0.08);
+  color: $color-text;
+}
+
+.status-message--error {
+  background: rgba(220, 38, 38, 0.12);
+  color: #991b1b;
+}
+
+.status-message--success {
+  background: rgba(22, 163, 74, 0.12);
+  color: #166534;
+}
+
+.booking-empty-state {
+  justify-items: start;
+}
+
 @media (max-width: 900px) {
-  .booking-panel {
+  .booking-layout,
+  .booking-empty-state {
     grid-template-columns: 1fr;
   }
 }

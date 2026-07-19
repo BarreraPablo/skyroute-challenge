@@ -164,6 +164,20 @@ h2 {
   font-size: 0.9rem;
 }
 
+.table-action {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.table-action button {
+  border: 1px solid $color-brand;
+  border-radius: 999px;
+  padding: 10px 14px;
+  color: $color-brand;
+  background: transparent;
+  cursor: pointer;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
