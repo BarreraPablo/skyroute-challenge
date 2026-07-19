@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { bookingSelectionGuard } from './core/guards/booking-selection.guard';
 
 export const routes: Routes = [
   {
@@ -7,6 +8,7 @@ export const routes: Routes = [
   },
   {
     path: 'booking',
+    canActivate: [bookingSelectionGuard],
     loadComponent: () => import('./features/booking/booking.page').then((m) => m.BookingPage)
   },
   {
