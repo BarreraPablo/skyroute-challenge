@@ -39,18 +39,20 @@ h2 {
 
 .search-form {
   display: grid;
-  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
   align-content: start;
 }
 
-.search-form label {
+.search-form .field {
   display: grid;
   gap: 8px;
   color: $color-text-muted;
   font-size: 0.92rem;
 }
 
-.search-form input {
+.search-form input,
+.search-form select {
   border: 1px solid $color-border;
   border-radius: $radius-sm;
   padding: 12px 14px;
@@ -59,6 +61,7 @@ h2 {
 }
 
 .search-form button {
+  grid-column: 1 / -1;
   margin-top: 6px;
   border: 0;
   border-radius: 999px;
@@ -68,17 +71,76 @@ h2 {
   cursor: pointer;
 }
 
+.search-form button:disabled {
+  opacity: 0.72;
+  cursor: progress;
+}
+
+.form-error {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #b91c1c;
+  font-weight: 600;
+}
+
 .results-panel {
   margin-top: 24px;
 }
 
-.results-grid {
-  display: grid;
-  gap: 16px;
+.status-message {
+  padding: 18px 20px;
+  border-radius: $radius-md;
+  background: $color-surface-strong;
+  color: $color-text-muted;
+}
+
+.status-message--error {
+  background: rgba(254, 242, 242, 0.9);
+  color: #b91c1c;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 920px;
+}
+
+.results-table th,
+.results-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid $color-border;
+  text-align: left;
+  vertical-align: top;
+}
+
+.results-table th {
+  color: $color-text-muted;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.results-table td strong,
+.results-table td span {
+  display: block;
+}
+
+.results-table td span {
+  margin-top: 4px;
+  color: $color-text-muted;
+  font-size: 0.9rem;
 }
 
 @media (max-width: 900px) {
   .page-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .search-form {
     grid-template-columns: 1fr;
   }
 }

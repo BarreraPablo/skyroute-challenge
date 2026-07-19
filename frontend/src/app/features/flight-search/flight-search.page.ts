@@ -1,55 +1,112 @@
-import { Component, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FlightCardComponent } from '../../shared/components/flight-card/flight-card.component';
-import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
-import { Flight } from '../../core/models/flight.model';
+import { firstValueFrom } from 'rxjs';
+import { FlightApiService, FlightSearchResult } from '../../core/services/flight-api.service';
+import { Airport } from '../../core/models/airport.model';
 
 @Component({
   selector: 'app-flight-search-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FlightCardComponent, EmptyStateComponent],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './flight-search.page.html',
   styleUrl: './flight-search.page.scss'
 })
 export class FlightSearchPage {
-  private readonly fb = new FormBuilder();
+  private readonly fb = inject(FormBuilder).nonNullable;
+  private readonly flightApiService = inject(FlightApiService);
 
-  readonly flights = signal<Flight[]>([
-    {
-      id: 'FL-001',
-      provider: 'GlobalAir',
-      from: 'JFK',
-      to: 'LAX',
-      departureTime: '08:40',
-      arrivalTime: '11:20',
-      durationMinutes: 340,
-      price: 280,
-      cabinClass: 'Economy'
-    },
-    {
-      id: 'FL-002',
-      provider: 'BudgetWings',
-      from: 'JFK',
-      to: 'LAX',
-      departureTime: '13:10',
-      arrivalTime: '16:25',
-      durationMinutes: 335,
-      price: 215,
-      cabinClass: 'Economy'
-    }
-  ]);
+  readonly airports = signal<Airport[]>([]);
+
+  readonly cabinClasses = ['Economy', 'Business', 'First Class'] as const;
+
+  readonly flights = signal<FlightSearchResult[]>([]);
+  readonly loading = signal(false);
+  readonly errorMessage = signal<string | null>(null);
 
   readonly filters = this.fb.group({
     origin: ['', Validators.required],
     destination: ['', Validators.required],
     departureDate: ['', Validators.required],
-    passengers: [1, [Validators.required, Validators.min(1)]]
+    passengers: [1, [Validators.required, Validators.min(1), Validators.max(9)]],
+    cabinClass: ['Economy', Validators.required]
   });
 
   readonly hasFlights = computed(() => this.flights().length > 0);
+  readonly hasSearched = signal(false);
 
-  search(): void {
+  constructor() {
+    this.filters.addValidators(() => {
+      const origin = this.filters.controls.origin.value;
+      const destination = this.filters.controls.destination.value;
+
+      return origin && destination && origin === destination ? { sameAirport: true } : null;
+    });
+  }
+
+  async ngOnInit(): Promise<void> {
+    const airports = await firstValueFrom(this.flightApiService.getAirports());
+    this.airports.set(airports);
+  }
+
+  async search(): Promise<void> {
     this.filters.markAllAsTouched();
+
+    if (this.filters.invalid) {
+      return;
+    }
+
+    const formValue = this.filters.getRawValue();
+
+    this.loading.set(true);
+    this.errorMessage.set(null);
+    this.hasSearched.set(true);
+
+    try {
+      const response = await firstValueFrom(
+        this.flightApiService.search({
+          originCode: formValue.origin,
+          destinationCode: formValue.destination,
+          departureDate: formValue.departureDate,
+          numberOfPassengers: formValue.passengers,
+          cabinClass: formValue.cabinClass
+        })
+      );
+
+      this.flights.set(response.flights);
+    } catch {
+      this.flights.set([]);
+      this.errorMessage.set('Unable to load flights. Please try again.');
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  formatDateTime(value: string): string {
+    return new Intl.DateTimeFormat('en-US', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+      timeZone: 'UTC'
+    }).format(new Date(value));
+  }
+
+  formatCurrency(value: number): string {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      currencyDisplay: 'code',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(value);
+  }
+
+  formatDuration(departureTimeUtc: string, arrivalTimeUtc: string): string {
+    const departureTime = new Date(departureTimeUtc).getTime();
+    const arrivalTime = new Date(arrivalTimeUtc).getTime();
+    const durationMinutes = Math.max(0, Math.round((arrivalTime - departureTime) / 60000));
+    const hours = Math.floor(durationMinutes / 60);
+    const minutes = durationMinutes % 60;
+
+    return `${hours}h ${minutes.toString().padStart(2, '0')}m`;
   }
 }

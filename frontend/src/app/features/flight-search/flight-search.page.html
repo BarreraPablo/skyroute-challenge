@@ -1,48 +1,100 @@
 <section class="page-hero">
   <div>
     <p class="section-label">Search</p>
-    <h2>Compare live fares across airline providers.</h2>
+    <h2>Find flights and compare total trip prices.</h2>
     <p class="section-copy">
-      This scaffold keeps the search flow separated from booking, with standalone components and feature-level routes.
+      Choose your route, cabin class, and passenger count, then compare live fares from the backend search endpoint.
     </p>
   </div>
 
   <form class="search-form" [formGroup]="filters" (ngSubmit)="search()">
-    <label>
+    <label class="field">
       Origin
-      <input type="text" formControlName="origin" placeholder="JFK">
+      <select formControlName="origin">
+        <option value="" disabled>Select an airport</option>
+        @for (airport of airports(); track airport.code) {
+          <option [value]="airport.code">{{ airport.code }} - {{ airport.name }} ({{ airport.country }})</option>
+        }
+      </select>
     </label>
 
-    <label>
+    <label class="field">
       Destination
-      <input type="text" formControlName="destination" placeholder="LAX">
+      <select formControlName="destination">
+        <option value="" disabled>Select an airport</option>
+        @for (airport of airports(); track airport.code) {
+          <option [value]="airport.code">{{ airport.code }} - {{ airport.name }} ({{ airport.country }})</option>
+        }
+      </select>
     </label>
 
-    <label>
+    <label class="field">
       Departure date
       <input type="date" formControlName="departureDate">
     </label>
 
-    <label>
+    <label class="field">
       Passengers
-      <input type="number" min="1" formControlName="passengers">
+      <input type="number" min="1" max="9" formControlName="passengers">
     </label>
 
-    <button type="submit">Search flights</button>
+    <label class="field">
+      Cabin class
+      <select formControlName="cabinClass">
+        @for (cabinClass of cabinClasses; track cabinClass) {
+          <option [value]="cabinClass">{{ cabinClass }}</option>
+        }
+      </select>
+    </label>
+
+    <button type="submit" [disabled]="loading()">{{ loading() ? 'Searching...' : 'Search flights' }}</button>
+
+    @if (filters.hasError('sameAirport') && filters.touched) {
+      <p class="form-error">Origin and destination must be different airports.</p>
+    }
   </form>
 </section>
 
 <section class="results-panel">
-  @if (hasFlights()) {
-    <div class="results-grid">
-      @for (flight of flights(); track flight.id) {
-        <app-flight-card [flight]="flight"></app-flight-card>
-      }
+  @if (errorMessage()) {
+    <div class="status-message status-message--error">{{ errorMessage() }}</div>
+  } @else if (loading()) {
+    <div class="status-message">Searching flights...</div>
+  } @else if (hasFlights()) {
+    <div class="table-wrap">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th>Airline provider</th>
+            <th>Flight number</th>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>Duration</th>
+            <th>Cabin class</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (flight of flights(); track flight.flightId) {
+            <tr>
+              <td>{{ flight.providerName }}</td>
+              <td>{{ flight.flightId }}</td>
+              <td>{{ formatDateTime(flight.departureTimeUtc) }}</td>
+              <td>{{ formatDateTime(flight.arrivalTimeUtc) }}</td>
+              <td>{{ formatDuration(flight.departureTimeUtc, flight.arrivalTimeUtc) }}</td>
+              <td>{{ flight.cabinClass }}</td>
+              <td>
+                <strong>{{ formatCurrency(flight.totalPrice) }} total</strong>
+                <span>{{ formatCurrency(flight.pricePerPassenger) }} per person</span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
     </div>
+  } @else if (hasSearched()) {
+    <div class="status-message">No flights matched your search.</div>
   } @else {
-    <app-empty-state
-      title="No flights found"
-      description="Adjust your search criteria to see available results.">
-    </app-empty-state>
+    <div class="status-message">Use the form above to search for flights.</div>
   }
 </section>

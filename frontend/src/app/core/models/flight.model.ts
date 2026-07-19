@@ -7,5 +7,5 @@ export interface Flight {
   arrivalTime: string;
   durationMinutes: number;
   price: number;
-  cabinClass: 'Economy' | 'Business' | 'First';
+  cabinClass: 'Economy' | 'Business' | 'First Class';
 }
