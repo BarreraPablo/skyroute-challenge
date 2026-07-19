@@ -60,6 +60,19 @@ h2 {
   color: $color-text;
 }
 
+.search-form .field--invalid input,
+.search-form .field--invalid select {
+  border-color: #b91c1c;
+}
+
+.field-error {
+  margin: 0;
+  color: #b91c1c;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
 .search-form button {
   grid-column: 1 / -1;
   margin-top: 6px;

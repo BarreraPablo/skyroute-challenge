@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, computed, inject, signal } from '@angular/core';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { BookingSelection } from '../../core/models/booking-selection.model';
@@ -9,6 +9,7 @@ import { FlightApiService, FlightSearchResult } from '../../core/services/flight
 import { Airport } from '../../core/models/airport.model';
 
 type FlightSortOrder = 'priceAsc' | 'priceDesc' | 'durationAsc' | 'departureAsc';
+type FlightSearchControlName = 'origin' | 'destination' | 'departureDate' | 'passengers' | 'cabinClass';
 
 @Component({
   selector: 'app-flight-search-page',
@@ -25,6 +26,8 @@ export class FlightSearchPage {
 
   readonly airports = signal<Airport[]>([]);
   readonly sortOrder = signal<FlightSortOrder>('priceAsc');
+  readonly submitted = signal(false);
+  readonly minDepartureDate = this.getTodayIsoDate();
 
   readonly sortOptions: Array<{ value: FlightSortOrder; label: string }> = [
     { value: 'priceAsc', label: 'Price: Low to High' },
@@ -42,7 +45,7 @@ export class FlightSearchPage {
   readonly filters = this.fb.group({
     origin: ['', Validators.required],
     destination: ['', Validators.required],
-    departureDate: ['', Validators.required],
+    departureDate: ['', [Validators.required, this.validateDepartureDate]],
     passengers: [1, [Validators.required, Validators.min(1), Validators.max(9)]],
     cabinClass: ['Economy', Validators.required]
   });
@@ -106,6 +109,8 @@ export class FlightSearchPage {
   }
 
   async search(): Promise<void> {
+    this.submitted.set(true);
+    this.errorMessage.set(null);
     this.filters.markAllAsTouched();
 
     if (this.filters.invalid) {
@@ -166,6 +171,17 @@ export class FlightSearchPage {
     return `${hours}h ${minutes.toString().padStart(2, '0')}m`;
   }
 
+  shouldShowControlError(controlName: FlightSearchControlName, errorKey?: string): boolean {
+    const control = this.filters.controls[controlName];
+    const canShowError = this.submitted() || control.touched;
+
+    if (!canShowError) {
+      return false;
+    }
+
+    return errorKey ? control.hasError(errorKey) : control.invalid;
+  }
+
   private sortFlights(flights: FlightSearchResult[], order: FlightSortOrder): FlightSearchResult[] {
     return [...flights].sort((left, right) => {
       switch (order) {
@@ -193,5 +209,49 @@ export class FlightSearchPage {
     }
 
     return `${normalizedName}, ${country} (${code})`;
+  }
+
+  private validateDepartureDate(control: AbstractControl): ValidationErrors | null {
+    const value = String(control.value ?? '').trim();
+
+    if (!value) {
+      return null;
+    }
+
+    const parts = value.split('-');
+
+    if (parts.length !== 3) {
+      return { invalidDate: true };
+    }
+
+    const [year, month, day] = parts.map((part) => Number(part));
+    const selectedDate = new Date(year, month - 1, day);
+
+    if (
+      Number.isNaN(year) ||
+      Number.isNaN(month) ||
+      Number.isNaN(day) ||
+      selectedDate.getFullYear() !== year ||
+      selectedDate.getMonth() !== month - 1 ||
+      selectedDate.getDate() !== day
+    ) {
+      return { invalidDate: true };
+    }
+
+    selectedDate.setHours(0, 0, 0, 0);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    return selectedDate < today ? { pastDate: true } : null;
+  }
+
+  private getTodayIsoDate(): string {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 }

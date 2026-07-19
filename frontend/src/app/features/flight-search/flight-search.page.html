@@ -8,7 +8,7 @@
   </div>
 
   <form class="search-form" [formGroup]="filters" (ngSubmit)="search()">
-    <label class="field">
+    <label class="field" [class.field--invalid]="shouldShowControlError('origin')">
       Origin
       <select formControlName="origin">
         <option value="" disabled>Select an airport</option>
@@ -16,9 +16,13 @@
           <option [value]="airport.code">{{ formatAirportLabel(airport) }}</option>
         }
       </select>
+
+      @if (shouldShowControlError('origin', 'required')) {
+        <p class="field-error">Select an origin airport.</p>
+      }
     </label>
 
-    <label class="field">
+    <label class="field" [class.field--invalid]="shouldShowControlError('destination')">
       Destination
       <select formControlName="destination">
         <option value="" disabled>Select an airport</option>
@@ -26,31 +30,67 @@
           <option [value]="airport.code">{{ formatAirportLabel(airport) }}</option>
         }
       </select>
+
+      @if (shouldShowControlError('destination', 'required')) {
+        <p class="field-error">Select a destination airport.</p>
+      }
     </label>
 
-    <label class="field">
+    <label class="field" [class.field--invalid]="shouldShowControlError('departureDate')">
       Departure date
-      <input type="date" formControlName="departureDate">
+      <input type="date" [attr.min]="minDepartureDate" formControlName="departureDate">
+
+      @if (shouldShowControlError('departureDate', 'required')) {
+        <p class="field-error">Select a departure date.</p>
+      }
+
+      @if (shouldShowControlError('departureDate', 'pastDate')) {
+        <p class="field-error">Departure date cannot be in the past.</p>
+      }
+
+      @if (shouldShowControlError('departureDate', 'invalidDate')) {
+        <p class="field-error">Enter a valid departure date.</p>
+      }
     </label>
 
-    <label class="field">
+    <label class="field" [class.field--invalid]="shouldShowControlError('passengers')">
       Passengers
       <input type="number" min="1" max="9" formControlName="passengers">
+
+      @if (shouldShowControlError('passengers', 'required')) {
+        <p class="field-error">Enter the number of passengers.</p>
+      }
+
+      @if (shouldShowControlError('passengers', 'min')) {
+        <p class="field-error">At least 1 passenger is required.</p>
+      }
+
+      @if (shouldShowControlError('passengers', 'max')) {
+        <p class="field-error">You can book up to 9 passengers.</p>
+      }
     </label>
 
-    <label class="field">
+    <label class="field" [class.field--invalid]="shouldShowControlError('cabinClass')">
       Cabin class
       <select formControlName="cabinClass">
         @for (cabinClass of cabinClasses; track cabinClass) {
           <option [value]="cabinClass">{{ cabinClass }}</option>
         }
       </select>
+
+      @if (shouldShowControlError('cabinClass', 'required')) {
+        <p class="field-error">Select a cabin class.</p>
+      }
     </label>
 
-    <button type="submit" [disabled]="loading()">{{ loading() ? 'Searching...' : 'Search flights' }}</button>
+    <button type="submit" [disabled]="loading() || filters.invalid">{{ loading() ? 'Searching...' : 'Search flights' }}</button>
 
-    @if (filters.hasError('sameAirport') && filters.touched) {
+    @if (filters.hasError('sameAirport') && (filters.touched || submitted())) {
       <p class="form-error">Origin and destination must be different airports.</p>
+    }
+
+    @if (filters.invalid && submitted()) {
+      <p class="form-error">Please fix the highlighted fields and try again.</p>
     }
   </form>
 </section>
