@@ -76,6 +76,27 @@ public class CreateBookingServiceTests
         Assert.Empty(repository.StoredBookings);
     }
 
+    [Fact]
+    public async Task CreateAsync_WhenCabinClassIsInvalid_ReturnsValidationError()
+    {
+        var repository = new FakeBookingRepository();
+        var provider = new FakeProvider("BudgetWings", CreateMatchingFlight());
+        var airportReferenceService = new AirportReferenceService();
+        var sut = new CreateBookingService([provider], repository, airportReferenceService);
+
+        var request = BuildValidRequest() with
+        {
+            CabinClass = "Premium Economy"
+        };
+
+        var (validationResult, response) = await sut.CreateAsync(request, CancellationToken.None);
+
+        Assert.Equal(400, validationResult.StatusCode);
+        Assert.Null(response);
+        Assert.Contains(validationResult.Conditions, item => item.Message.Contains("Cabin class must be one of", StringComparison.OrdinalIgnoreCase));
+        Assert.Empty(repository.StoredBookings);
+    }
+
     private static CreateBookingRequest BuildValidRequest() =>
         new(
             FlightId: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",

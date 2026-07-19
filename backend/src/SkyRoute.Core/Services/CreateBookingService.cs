@@ -1,4 +1,5 @@
 using SkyRoute.Contracts.Bookings;
+using SkyRoute.Contracts.Flights;
 using SkyRoute.Contracts.Validation;
 using SkyRoute.Core.Entities;
 using SkyRoute.Core.Enums;
@@ -186,6 +187,11 @@ public class CreateBookingService : ICreateBookingService
         if (request.PricePerPassenger <= 0)
         {
             validation.Conditions.Add(CreateError("Price per passenger must be greater than zero."));
+        }
+
+        if (!CabinClasses.All.Contains(request.CabinClass, StringComparer.OrdinalIgnoreCase))
+        {
+            validation.Conditions.Add(CreateError($"Cabin class must be one of: {string.Join(", ", CabinClasses.All)}."));
         }
 
         if (request.ArrivalTimeUtc <= request.DepartureTimeUtc)
