@@ -9,6 +9,8 @@ public class BudgetWingsService : IFlightProviderExternalService
     private readonly IBudgetWingsProxy _proxy;
     private readonly IFlightPricingStrategy _pricingStrategy;
 
+    public string ProviderName => "BudgetWings";
+
     public BudgetWingsService(IBudgetWingsProxy proxy, IBudgetWingsPricingStrategy pricingStrategy)
     {
         _proxy = proxy;
@@ -24,6 +26,21 @@ public class BudgetWingsService : IFlightProviderExternalService
         return response.Flights
             .Select(flight => MapToFlightResponse(flight, request.NumberOfPassengers))
             .ToList();
+    }
+
+    public async Task<FlightResponse?> GetFlightByIdAsync(
+        string flightId,
+        SearchFlightRequest request,
+        CancellationToken cancellationToken)
+    {
+        var offer = await _proxy.GetFlightByIdAsync(flightId, request, cancellationToken);
+
+        if (offer is null)
+        {
+            return null;
+        }
+
+        return MapToFlightResponse(offer, request.NumberOfPassengers);
     }
 
     private FlightResponse MapToFlightResponse(BudgetWingsOffer offer, int numberOfPassengers)

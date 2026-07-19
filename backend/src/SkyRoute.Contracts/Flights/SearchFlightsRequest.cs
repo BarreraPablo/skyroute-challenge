@@ -1,8 +1,8 @@
 namespace SkyRoute.Contracts.Flights;
 
 public record SearchFlightsRequest(
-    string Origin,
-    string Destination,
+    string OriginCode,
+    string DestinationCode,
     DateOnly DepartureDate,
     int NumberOfPassengers,
     string CabinClass);

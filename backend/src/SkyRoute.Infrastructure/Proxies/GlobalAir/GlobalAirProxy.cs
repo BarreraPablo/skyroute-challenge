@@ -49,6 +49,51 @@ public class GlobalAirProxy : IGlobalAirProxy
         };
     }
 
+    public async Task<GlobalAirLeg?> GetFlightByIdAsync(
+        string flightId,
+        SearchFlightRequest request,
+        CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        await Task.Delay(TimeSpan.FromMilliseconds(50), cancellationToken);
+
+        var departureDate = request.DepartureDate.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+
+        var allResults = new List<GlobalAirLeg>
+        {
+            CreateLeg("100234", request, departureDate, "Economy", 349.99m, 9),
+            CreateLeg("100235", request, departureDate, "Business", 899.50m, 4)
+        };
+
+        var leg = allResults
+            .FirstOrDefault(item => item.Id.Equals(flightId, StringComparison.OrdinalIgnoreCase));
+
+        if (leg is null ||
+            !leg.Fare.Cabin.Equals(request.CabinClass, StringComparison.OrdinalIgnoreCase) ||
+            request.NumberOfPassengers > leg.Inventory.NumberOfPassengersAvailable)
+        {
+            return null;
+        }
+
+        return new GlobalAirLeg
+        {
+            Id = leg.Id,
+            Departure = leg.Departure,
+            Arrival = leg.Arrival,
+            Schedule = leg.Schedule,
+            Fare = new GlobalAirFare
+            {
+                Cabin = leg.Fare.Cabin,
+                PricePerPax = ApplyGroupPricing(leg.Fare.PricePerPax, request.NumberOfPassengers)
+            },
+            Inventory = new GlobalAirInventory
+            {
+                NumberOfPassengersAvailable = leg.Inventory.NumberOfPassengersAvailable
+            }
+        };
+    }
+
     private static GlobalAirLeg CreateLeg(
         string id,
         SearchFlightRequest request,
@@ -66,12 +111,12 @@ public class GlobalAirProxy : IGlobalAirProxy
             Departure = new GlobalAirLocation
             {
                 Airport = request.Origin,
-                Country = "United States"
+                Country = "US"
             },
             Arrival = new GlobalAirLocation
             {
                 Airport = request.Destination,
-                Country = "Spain"
+                Country = "ES"
             },
             Schedule = new GlobalAirSchedule
             {

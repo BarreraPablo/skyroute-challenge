@@ -24,7 +24,7 @@ public class BudgetWingsProxy : IBudgetWingsProxy
                 departureDate,
                 "Economy",
                 279.00m,
-                6,
+                9,
                 18,
                 9),
             CreateOffer(
@@ -62,6 +62,64 @@ public class BudgetWingsProxy : IBudgetWingsProxy
         };
     }
 
+    public async Task<BudgetWingsOffer?> GetFlightByIdAsync(
+        string flightId,
+        SearchFlightRequest request,
+        CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        await Task.Delay(TimeSpan.FromMilliseconds(50), cancellationToken);
+
+        var departureDate = request.DepartureDate.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+
+        var allFlights = new List<BudgetWingsOffer>
+        {
+            CreateOffer(
+                Guid.Parse("a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
+                request,
+                departureDate,
+                "Economy",
+                279.00m,
+                9,
+                18,
+                9),
+            CreateOffer(
+                Guid.Parse("b2c3d4e5-f6a7-8901-bcde-f12345678901"),
+                request,
+                departureDate,
+                "First Class",
+                1249.99m,
+                19,
+                31,
+                2)
+        };
+
+        var offer = allFlights
+            .FirstOrDefault(item => item.FlightGuid.ToString().Equals(flightId, StringComparison.OrdinalIgnoreCase));
+
+        if (offer is null ||
+            !offer.ClassType.Equals(request.CabinClass, StringComparison.OrdinalIgnoreCase) ||
+            request.NumberOfPassengers > offer.NumberOfPassengersAvailable)
+        {
+            return null;
+        }
+
+        return new BudgetWingsOffer
+        {
+            FlightGuid = offer.FlightGuid,
+            FromCode = offer.FromCode,
+            FromCountry = offer.FromCountry,
+            ToCode = offer.ToCode,
+            ToCountry = offer.ToCountry,
+            DepartureTime = offer.DepartureTime,
+            ArrivalTime = offer.ArrivalTime,
+            ClassType = offer.ClassType,
+            UnitPrice = ApplyGroupPricing(offer.UnitPrice, request.NumberOfPassengers),
+            NumberOfPassengersAvailable = offer.NumberOfPassengersAvailable
+        };
+    }
+
     private static BudgetWingsOffer CreateOffer(
         Guid flightGuid,
         SearchFlightRequest request,
@@ -75,9 +133,9 @@ public class BudgetWingsProxy : IBudgetWingsProxy
         {
             FlightGuid = flightGuid,
             FromCode = request.Origin,
-            FromCountry = "United States",
+            FromCountry = "US",
             ToCode = request.Destination,
-            ToCountry = "Spain",
+            ToCountry = "ES",
             DepartureTime = departureDate.AddHours(departureHourOffset),
             ArrivalTime = departureDate.AddHours(arrivalHourOffset),
             ClassType = classType,

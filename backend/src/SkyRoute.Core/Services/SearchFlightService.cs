@@ -32,8 +32,8 @@ public class SearchFlightService : ISearchFlightService
 
         var searchRequest = new SearchFlightRequest
         {
-            Origin = request.Origin,
-            Destination = request.Destination,
+            Origin = request.OriginCode,
+            Destination = request.DestinationCode,
             DepartureDate = request.DepartureDate,
             NumberOfPassengers = request.NumberOfPassengers,
             CabinClass = request.CabinClass
@@ -69,7 +69,7 @@ public class SearchFlightService : ISearchFlightService
             return validationResult;
         }
 
-        if (string.IsNullOrWhiteSpace(request.Origin))
+        if (string.IsNullOrWhiteSpace(request.OriginCode))
         {
             validationResult.Conditions.Add(new ValidationDto
             {
@@ -78,7 +78,7 @@ public class SearchFlightService : ISearchFlightService
             });
         }
 
-        if (string.IsNullOrWhiteSpace(request.Destination))
+        if (string.IsNullOrWhiteSpace(request.DestinationCode))
         {
             validationResult.Conditions.Add(new ValidationDto
             {
@@ -87,9 +87,9 @@ public class SearchFlightService : ISearchFlightService
             });
         }
 
-        if (!string.IsNullOrWhiteSpace(request.Origin) &&
-            !string.IsNullOrWhiteSpace(request.Destination) &&
-            request.Origin.Equals(request.Destination, StringComparison.OrdinalIgnoreCase))
+        if (!string.IsNullOrWhiteSpace(request.OriginCode) &&
+            !string.IsNullOrWhiteSpace(request.DestinationCode) &&
+            request.OriginCode.Equals(request.DestinationCode, StringComparison.OrdinalIgnoreCase))
         {
             validationResult.Conditions.Add(new ValidationDto
             {
@@ -98,23 +98,23 @@ public class SearchFlightService : ISearchFlightService
             });
         }
 
-        if (!string.IsNullOrWhiteSpace(request.Origin) &&
-            !_airportReferenceService.IsValidAirportCode(request.Origin))
+        if (!string.IsNullOrWhiteSpace(request.OriginCode) &&
+            !_airportReferenceService.IsValidAirportCode(request.OriginCode))
         {
             validationResult.Conditions.Add(new ValidationDto
             {
                 Severity = ValidationSeverity.Error,
-                Message = $"Unknown origin airport code: {request.Origin}."
+                Message = $"Unknown origin airport code: {request.OriginCode}."
             });
         }
 
-        if (!string.IsNullOrWhiteSpace(request.Destination) &&
-            !_airportReferenceService.IsValidAirportCode(request.Destination))
+        if (!string.IsNullOrWhiteSpace(request.DestinationCode) &&
+            !_airportReferenceService.IsValidAirportCode(request.DestinationCode))
         {
             validationResult.Conditions.Add(new ValidationDto
             {
                 Severity = ValidationSeverity.Error,
-                Message = $"Unknown destination airport code: {request.Destination}."
+                Message = $"Unknown destination airport code: {request.DestinationCode}."
             });
         }
 

@@ -9,6 +9,8 @@ public class GlobalAirService : IFlightProviderExternalService
     private readonly IGlobalAirProxy _proxy;
     private readonly IFlightPricingStrategy _pricingStrategy;
 
+    public string ProviderName => "GlobalAir";
+
     public GlobalAirService(IGlobalAirProxy proxy, IGlobalAirPricingStrategy pricingStrategy)
     {
         _proxy = proxy;
@@ -24,6 +26,21 @@ public class GlobalAirService : IFlightProviderExternalService
         return response.Results
             .Select(leg => MapToFlightResponse(leg, request.NumberOfPassengers))
             .ToList();
+    }
+
+    public async Task<FlightResponse?> GetFlightByIdAsync(
+        string flightId,
+        SearchFlightRequest request,
+        CancellationToken cancellationToken)
+    {
+        var leg = await _proxy.GetFlightByIdAsync(flightId, request, cancellationToken);
+
+        if (leg is null)
+        {
+            return null;
+        }
+
+        return MapToFlightResponse(leg, request.NumberOfPassengers);
     }
 
     private FlightResponse MapToFlightResponse(GlobalAirLeg leg, int numberOfPassengers)

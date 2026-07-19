@@ -16,6 +16,7 @@ public static class SkyRouteCoreServiceCollectionExtensions
         services.AddSingleton<IFlightProviderExternalService, BudgetWingsService>();
         services.AddSingleton<IAirportReferenceService, AirportReferenceService>();
         services.AddSingleton<ISearchFlightService, SearchFlightService>();
+        services.AddScoped<ICreateBookingService, CreateBookingService>();
 
         return services;
     }

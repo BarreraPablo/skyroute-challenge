@@ -8,4 +8,9 @@ public interface IGlobalAirProxy
     Task<GlobalAirAvailabilityResponse> SearchFlightsAsync(
         SearchFlightRequest request,
         CancellationToken cancellationToken);
+
+    Task<GlobalAirLeg?> GetFlightByIdAsync(
+        string flightId,
+        SearchFlightRequest request,
+        CancellationToken cancellationToken);
 }
