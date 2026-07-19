@@ -1,0 +1,44 @@
+@use '../../../../styles/variables' as *;
+
+.card {
+  padding: 18px 20px;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  background: $color-surface-strong;
+}
+
+.provider {
+  margin: 0 0 6px;
+  color: $color-brand;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 700;
+}
+
+h3 {
+  margin: 0;
+}
+
+dl {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0 0;
+}
+
+dt {
+  color: $color-text-muted;
+  font-size: 0.78rem;
+}
+
+dd {
+  margin: 4px 0 0;
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

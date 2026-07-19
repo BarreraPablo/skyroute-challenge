@@ -1,0 +1,70 @@
+@use '../../../styles/variables' as *;
+
+.booking-panel {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 0.9fr 1.1fr;
+  padding: 28px;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  background: $color-surface;
+  backdrop-filter: blur(14px);
+  box-shadow: $shadow-lg;
+}
+
+.section-label {
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  color: $color-accent;
+  font-weight: 700;
+}
+
+h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 2.7vw, 2.6rem);
+}
+
+.section-copy {
+  margin: 12px 0 0;
+  color: $color-text-muted;
+  line-height: 1.65;
+}
+
+.booking-form {
+  display: grid;
+  gap: 14px;
+}
+
+.booking-form label {
+  display: grid;
+  gap: 8px;
+  color: $color-text-muted;
+  font-size: 0.92rem;
+}
+
+.booking-form input,
+.booking-form select {
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  padding: 12px 14px;
+  background: $color-surface-strong;
+  color: $color-text;
+}
+
+.booking-form button {
+  margin-top: 6px;
+  border: 0;
+  border-radius: 999px;
+  padding: 13px 18px;
+  color: white;
+  background: linear-gradient(135deg, $color-accent, #c2410c);
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .booking-panel {
+    grid-template-columns: 1fr;
+  }
+}

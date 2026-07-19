@@ -1,0 +1,25 @@
+<article class="card">
+  <div>
+    <p class="provider">{{ flight().provider }}</p>
+    <h3>{{ flight().from }} to {{ flight().to }}</h3>
+  </div>
+
+  <dl>
+    <div>
+      <dt>Departure</dt>
+      <dd>{{ flight().departureTime }}</dd>
+    </div>
+    <div>
+      <dt>Arrival</dt>
+      <dd>{{ flight().arrivalTime }}</dd>
+    </div>
+    <div>
+      <dt>Duration</dt>
+      <dd>{{ flight().durationMinutes }} min</dd>
+    </div>
+    <div>
+      <dt>Price</dt>
+      <dd>${{ flight().price }}</dd>
+    </div>
+  </dl>
+</article>

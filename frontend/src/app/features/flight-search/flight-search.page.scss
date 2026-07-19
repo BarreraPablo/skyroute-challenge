@@ -1,0 +1,84 @@
+@use '../../../styles/variables' as *;
+
+.page-hero,
+.results-panel {
+  padding: 28px;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  background: $color-surface;
+  backdrop-filter: blur(14px);
+  box-shadow: $shadow-lg;
+}
+
+.page-hero {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1.1fr 1fr;
+}
+
+.section-label {
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  color: $color-brand;
+  font-weight: 700;
+}
+
+h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 3vw, 3rem);
+}
+
+.section-copy {
+  margin: 12px 0 0;
+  max-width: 58ch;
+  color: $color-text-muted;
+  line-height: 1.65;
+}
+
+.search-form {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.search-form label {
+  display: grid;
+  gap: 8px;
+  color: $color-text-muted;
+  font-size: 0.92rem;
+}
+
+.search-form input {
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  padding: 12px 14px;
+  background: $color-surface-strong;
+  color: $color-text;
+}
+
+.search-form button {
+  margin-top: 6px;
+  border: 0;
+  border-radius: 999px;
+  padding: 13px 18px;
+  color: white;
+  background: linear-gradient(135deg, $color-brand, $color-brand-strong);
+  cursor: pointer;
+}
+
+.results-panel {
+  margin-top: 24px;
+}
+
+.results-grid {
+  display: grid;
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .page-hero {
+    grid-template-columns: 1fr;
+  }
+}

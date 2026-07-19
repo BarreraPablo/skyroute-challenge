@@ -1,0 +1,19 @@
+@use '../../../../styles/variables' as *;
+
+.empty-state {
+  padding: 28px;
+  border: 1px dashed $color-border;
+  border-radius: $radius-md;
+  text-align: center;
+  color: $color-text-muted;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+h3 {
+  margin: 0 0 8px;
+  color: $color-text;
+}
+
+p {
+  margin: 0;
+}

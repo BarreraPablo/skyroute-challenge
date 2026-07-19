@@ -1,0 +1,36 @@
+<section class="booking-panel">
+  <div>
+    <p class="section-label">Booking</p>
+    <h2>Capture passenger details.</h2>
+    <p class="section-copy">
+      This route is ready for the booking flow and can evolve into a passenger-aware confirmation screen.
+    </p>
+  </div>
+
+  <form class="booking-form" [formGroup]="bookingForm" (ngSubmit)="submit()">
+    <label>
+      First name
+      <input type="text" formControlName="firstName">
+    </label>
+
+    <label>
+      Last name
+      <input type="text" formControlName="lastName">
+    </label>
+
+    <label>
+      Document type
+      <select formControlName="documentType">
+        <option value="Passport">Passport</option>
+        <option value="NationalId">National ID</option>
+      </select>
+    </label>
+
+    <label>
+      Document number
+      <input type="text" formControlName="documentNumber">
+    </label>
+
+    <button type="submit">Continue</button>
+  </form>
+</section>

@@ -1,0 +1,48 @@
+<section class="page-hero">
+  <div>
+    <p class="section-label">Search</p>
+    <h2>Compare live fares across airline providers.</h2>
+    <p class="section-copy">
+      This scaffold keeps the search flow separated from booking, with standalone components and feature-level routes.
+    </p>
+  </div>
+
+  <form class="search-form" [formGroup]="filters" (ngSubmit)="search()">
+    <label>
+      Origin
+      <input type="text" formControlName="origin" placeholder="JFK">
+    </label>
+
+    <label>
+      Destination
+      <input type="text" formControlName="destination" placeholder="LAX">
+    </label>
+
+    <label>
+      Departure date
+      <input type="date" formControlName="departureDate">
+    </label>
+
+    <label>
+      Passengers
+      <input type="number" min="1" formControlName="passengers">
+    </label>
+
+    <button type="submit">Search flights</button>
+  </form>
+</section>
+
+<section class="results-panel">
+  @if (hasFlights()) {
+    <div class="results-grid">
+      @for (flight of flights(); track flight.id) {
+        <app-flight-card [flight]="flight"></app-flight-card>
+      }
+    </div>
+  } @else {
+    <app-empty-state
+      title="No flights found"
+      description="Adjust your search criteria to see available results.">
+    </app-empty-state>
+  }
+</section>
