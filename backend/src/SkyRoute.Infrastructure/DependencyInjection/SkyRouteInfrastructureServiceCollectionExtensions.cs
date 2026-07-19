@@ -1,7 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SkyRoute.Core.ExternalServices.BudgetWings;
+using SkyRoute.Core.ExternalServices.GlobalAir;
 using SkyRoute.Infrastructure.Persistence;
+using SkyRoute.Infrastructure.Proxies.BudgetWings;
+using SkyRoute.Infrastructure.Proxies.GlobalAir;
 
 namespace SkyRoute.Infrastructure.DependencyInjection;
 
@@ -14,6 +18,9 @@ public static class SkyRouteInfrastructureServiceCollectionExtensions
 
         services.AddDbContext<SkyRouteDbContext>(options =>
             options.UseSqlServer(connectionString));
+
+        services.AddSingleton<IGlobalAirProxy, GlobalAirProxy>();
+        services.AddSingleton<IBudgetWingsProxy, BudgetWingsProxy>();
 
         return services;
     }
