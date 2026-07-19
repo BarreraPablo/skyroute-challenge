@@ -99,6 +99,35 @@ h2 {
   color: #b91c1c;
 }
 
+.status-message--loading {
+  position: relative;
+  padding-left: 52px;
+}
+
+.status-message--loading::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  margin-top: -9px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.results-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 14px;
+}
+
+.field--inline {
+  min-width: min(320px, 100%);
+}
+
 .table-wrap {
   overflow-x: auto;
 }
@@ -135,12 +164,26 @@ h2 {
   font-size: 0.9rem;
 }
 
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (max-width: 900px) {
   .page-hero {
     grid-template-columns: 1fr;
   }
 
+  .results-toolbar {
+    justify-content: stretch;
+  }
+
   .search-form {
     grid-template-columns: 1fr;
+  }
+
+  .field--inline {
+    min-width: 0;
   }
 }

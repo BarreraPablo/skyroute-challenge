@@ -5,6 +5,8 @@ import { firstValueFrom } from 'rxjs';
 import { FlightApiService, FlightSearchResult } from '../../core/services/flight-api.service';
 import { Airport } from '../../core/models/airport.model';
 
+type FlightSortOrder = 'priceAsc' | 'priceDesc' | 'durationAsc' | 'departureAsc';
+
 @Component({
   selector: 'app-flight-search-page',
   standalone: true,
@@ -17,6 +19,14 @@ export class FlightSearchPage {
   private readonly flightApiService = inject(FlightApiService);
 
   readonly airports = signal<Airport[]>([]);
+  readonly sortOrder = signal<FlightSortOrder>('priceAsc');
+
+  readonly sortOptions: Array<{ value: FlightSortOrder; label: string }> = [
+    { value: 'priceAsc', label: 'Price: Low to High' },
+    { value: 'priceDesc', label: 'Price: High to Low' },
+    { value: 'durationAsc', label: 'Duration: Shortest First' },
+    { value: 'departureAsc', label: 'Departure Time: Earliest First' }
+  ];
 
   readonly cabinClasses = ['Economy', 'Business', 'First Class'] as const;
 
@@ -33,6 +43,7 @@ export class FlightSearchPage {
   });
 
   readonly hasFlights = computed(() => this.flights().length > 0);
+  readonly sortedFlights = computed(() => this.sortFlights(this.flights(), this.sortOrder()));
   readonly hasSearched = signal(false);
 
   constructor() {
@@ -42,6 +53,10 @@ export class FlightSearchPage {
 
       return origin && destination && origin === destination ? { sameAirport: true } : null;
     });
+  }
+
+  onSortOrderChange(order: FlightSortOrder): void {
+    this.sortOrder.set(order);
   }
 
   async ngOnInit(): Promise<void> {
@@ -108,5 +123,24 @@ export class FlightSearchPage {
     const minutes = durationMinutes % 60;
 
     return `${hours}h ${minutes.toString().padStart(2, '0')}m`;
+  }
+
+  private sortFlights(flights: FlightSearchResult[], order: FlightSortOrder): FlightSearchResult[] {
+    return [...flights].sort((left, right) => {
+      switch (order) {
+        case 'priceAsc':
+          return left.totalPrice - right.totalPrice;
+        case 'priceDesc':
+          return right.totalPrice - left.totalPrice;
+        case 'durationAsc': {
+          const leftDuration = new Date(left.arrivalTimeUtc).getTime() - new Date(left.departureTimeUtc).getTime();
+          const rightDuration = new Date(right.arrivalTimeUtc).getTime() - new Date(right.departureTimeUtc).getTime();
+
+          return leftDuration - rightDuration;
+        }
+        case 'departureAsc':
+          return new Date(left.departureTimeUtc).getTime() - new Date(right.departureTimeUtc).getTime();
+      }
+    });
   }
 }

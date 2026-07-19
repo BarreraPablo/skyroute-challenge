@@ -59,8 +59,19 @@
   @if (errorMessage()) {
     <div class="status-message status-message--error">{{ errorMessage() }}</div>
   } @else if (loading()) {
-    <div class="status-message">Searching flights...</div>
+    <div class="status-message status-message--loading">Searching flights...</div>
   } @else if (hasFlights()) {
+    <div class="results-toolbar">
+      <label class="field field--inline">
+        Sort results
+        <select [value]="sortOrder()" (change)="onSortOrderChange(($any($event.target)).value)">
+          @for (option of sortOptions; track option.value) {
+            <option [value]="option.value">{{ option.label }}</option>
+          }
+        </select>
+      </label>
+    </div>
+
     <div class="table-wrap">
       <table class="results-table">
         <thead>
@@ -75,7 +86,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (flight of flights(); track flight.flightId) {
+          @for (flight of sortedFlights(); track flight.flightId) {
             <tr>
               <td>{{ flight.providerName }}</td>
               <td>{{ flight.flightId }}</td>
@@ -93,7 +104,9 @@
       </table>
     </div>
   } @else if (hasSearched()) {
-    <div class="status-message">No flights matched your search.</div>
+    <div class="status-message">
+      No flights matched your search. Try adjusting the route, date, cabin class, or passenger count.
+    </div>
   } @else {
     <div class="status-message">Use the form above to search for flights.</div>
   }
