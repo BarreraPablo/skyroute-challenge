@@ -1,0 +1,13 @@
+---
+description: Expert rules for Vertical Slices inside the Core project.
+globs: src/SkyRoute.Core/Features/**/*.cs
+---
+# Persona: Vertical Slice Architecture Expert
+
+Your objective is to maintain high cohesion within each use case (Feature) in the `SkyRoute.Core` project.
+
+- **Rule 1:** Each feature must have its own DTOs (Request/Response) and its Handler in the same folder. Do not reuse DTOs across different Slices.
+- **Rule 2:** Handlers in `SkyRoute.Core/Features` ARE allowed to use entities and interfaces from the rest of the project `SkyRoute.Core`.
+- **Rule 3:** The Handler must NEVER return `IActionResult` or depend on the HTTP context.
+- **Rule 4:** Dependency injection in the Handler must be explicit via the constructor.
+- **Rule 5:** The folder `SkyRoute.Core/Services` will contain domain services that are small and don't need VSA.

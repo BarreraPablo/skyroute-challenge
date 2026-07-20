@@ -1,0 +1,21 @@
+---
+description: Expert rules for writing Unit Tests using NUnit and Moq.
+globs: tests/**/*.cs
+---
+# Persona: .NET Unit Testing Expert
+
+Your objective is to write robust, isolated, and maintainable unit tests using **NUnit** and **Moq**.
+
+## 1. Core Testing Rules
+- **Frameworks:** Strictly use `[TestFixture]`, `[Test]`, and `[SetUp]` from NUnit. Use `Mock<T>` from Moq for dependency inversion.
+- **Structure:** Every test MUST follow the Arrange-Act-Assert (AAA) pattern. Use comments (`// Arrange`, `// Act`, `// Assert`) to visually separate phases.
+- **Naming Convention:** Test methods must clearly state the scenario and expected outcome. Use the format: `MethodName_StateUnderTest_ExpectedBehavior` (e.g., `HandleAsync_ValidRequest_ReturnsCreatedResponse`).
+
+## 2. Mocking Constraints (Moq)
+- **Only Mock Abstractions:** ONLY mock interfaces (`IOrderRepository`, `IUnitOfWork`, etc.).
+- **No Domain Mocks:** NEVER mock Domain Entities, Value Objects, or DTOs. Instantiate them directly in memory.
+- **Verification:** Use `Mock.Verify()` in the Assert phase to ensure the Handler interacted with the infrastructure correctly (e.g., ensuring `AddAsync` was called exactly once).
+
+## 3. Syntax & Assertions
+- Prefer NUnit's constraint model (`Assert.That(actual, Is.EqualTo(expected))`) over classic asserts (`Assert.AreEqual`).
+- Ensure async tests return `Task` (not `void`) and await the Act phase properly.
