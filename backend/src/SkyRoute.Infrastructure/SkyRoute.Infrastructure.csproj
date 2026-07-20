@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SkyRoute.Contracts\SkyRoute.Contracts.csproj" />
     <ProjectReference Include="..\SkyRoute.Core\SkyRoute.Core.csproj" />
   </ItemGroup>
 

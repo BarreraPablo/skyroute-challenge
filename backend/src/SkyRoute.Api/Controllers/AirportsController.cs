@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using SkyRoute.Contracts.Flights;
 using SkyRoute.Core.Services;
+using SkyRoute.Core.Services.Airports;
 
 namespace SkyRoute.Api.Controllers;
 

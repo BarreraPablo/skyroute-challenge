@@ -1,4 +1,4 @@
-namespace SkyRoute.Contracts.Bookings;
+namespace SkyRoute.Core.Features.Bookings.CreateBooking;
 
 public record CreateBookingRequest(
     string FlightId,

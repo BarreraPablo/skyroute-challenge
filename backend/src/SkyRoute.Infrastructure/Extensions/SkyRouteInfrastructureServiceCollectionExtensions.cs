@@ -9,7 +9,7 @@ using SkyRoute.Infrastructure.Persistence.Repositories;
 using SkyRoute.Infrastructure.Proxies.BudgetWings;
 using SkyRoute.Infrastructure.Proxies.GlobalAir;
 
-namespace SkyRoute.Infrastructure.DependencyInjection;
+namespace SkyRoute.Infrastructure.Extensions;
 
 public static class SkyRouteInfrastructureServiceCollectionExtensions
 {

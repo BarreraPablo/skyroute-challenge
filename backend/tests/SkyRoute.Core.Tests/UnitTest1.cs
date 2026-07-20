@@ -1,6 +1,6 @@
-﻿using SkyRoute.Contracts.Bookings;
-using SkyRoute.Core.Entities;
+﻿using SkyRoute.Core.Entities;
 using SkyRoute.Core.ExternalServices;
+using SkyRoute.Core.Features.Bookings.CreateBooking;
 using SkyRoute.Core.Interfaces;
 using SkyRoute.Core.Models;
 using SkyRoute.Core.Services;

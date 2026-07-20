@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using SkyRoute.Contracts.Bookings;
-using SkyRoute.Core.Services;
+using SkyRoute.Core.Features.Bookings.CreateBooking;
 
 namespace SkyRoute.Api.Controllers;
 

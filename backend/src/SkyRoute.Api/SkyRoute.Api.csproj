@@ -12,7 +12,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.3" />
-    <ProjectReference Include="..\SkyRoute.Contracts\SkyRoute.Contracts.csproj" />
     <ProjectReference Include="..\SkyRoute.Core\SkyRoute.Core.csproj" />
     <ProjectReference Include="..\SkyRoute.Infrastructure\SkyRoute.Infrastructure.csproj" />
   </ItemGroup>

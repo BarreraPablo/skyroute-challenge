@@ -1,4 +1,4 @@
-using SkyRoute.Contracts.Flights;
+using SkyRoute.Core.Services.Airports;
 
 namespace SkyRoute.Core.Services;
 

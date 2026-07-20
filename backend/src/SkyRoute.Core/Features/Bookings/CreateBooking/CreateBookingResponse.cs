@@ -1,3 +1,3 @@
-namespace SkyRoute.Contracts.Bookings;
+namespace SkyRoute.Core.Features.Bookings.CreateBooking;
 
 public record CreateBookingResponse(string BookingReference);

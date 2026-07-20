@@ -4,14 +4,14 @@ using SkyRoute.Core.Pricing;
 
 namespace SkyRoute.Core.ExternalServices.BudgetWings;
 
-public class BudgetWingsService : IFlightProviderExternalService
+public class BudgetWingsExternalService : IFlightProviderExternalService
 {
     private readonly IBudgetWingsProxy _proxy;
     private readonly IFlightPricingStrategy _pricingStrategy;
 
     public string ProviderName => "BudgetWings";
 
-    public BudgetWingsService(IBudgetWingsProxy proxy, IBudgetWingsPricingStrategy pricingStrategy)
+    public BudgetWingsExternalService(IBudgetWingsProxy proxy, IBudgetWingsPricingStrategy pricingStrategy)
     {
         _proxy = proxy;
         _pricingStrategy = pricingStrategy;

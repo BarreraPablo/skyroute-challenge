@@ -1,4 +1,4 @@
-namespace SkyRoute.Contracts.Flights;
+namespace SkyRoute.Core.Constants;
 
 public static class CabinClasses
 {

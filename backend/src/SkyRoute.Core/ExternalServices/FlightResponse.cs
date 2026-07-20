@@ -1,4 +1,4 @@
-namespace SkyRoute.Core.Models;
+namespace SkyRoute.Core.ExternalServices;
 
 public class FlightResponse
 {

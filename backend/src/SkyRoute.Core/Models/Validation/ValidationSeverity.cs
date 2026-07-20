@@ -1,4 +1,4 @@
-namespace SkyRoute.Contracts.Validation;
+namespace SkyRoute.Core.Models.Validation;
 
 public enum ValidationSeverity
 {

@@ -1,5 +1,5 @@
-using SkyRoute.Core.DependencyInjection;
-using SkyRoute.Infrastructure.DependencyInjection;
+using SkyRoute.Core.Extensions;
+using SkyRoute.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

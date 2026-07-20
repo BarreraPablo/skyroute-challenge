@@ -1,13 +1,13 @@
-using SkyRoute.Contracts.Bookings;
-using SkyRoute.Contracts.Flights;
-using SkyRoute.Contracts.Validation;
+using SkyRoute.Core.Models.Validation;
+using SkyRoute.Core.Constants;
 using SkyRoute.Core.Entities;
 using SkyRoute.Core.Enums;
 using SkyRoute.Core.ExternalServices;
 using SkyRoute.Core.Interfaces;
 using SkyRoute.Core.Models;
+using SkyRoute.Core.Services;
 
-namespace SkyRoute.Core.Services;
+namespace SkyRoute.Core.Features.Bookings.CreateBooking;
 
 public class CreateBookingService : ICreateBookingService
 {

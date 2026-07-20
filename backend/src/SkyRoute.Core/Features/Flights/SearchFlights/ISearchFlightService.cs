@@ -1,7 +1,6 @@
-using SkyRoute.Contracts.Flights;
-using SkyRoute.Contracts.Validation;
+using SkyRoute.Core.Models.Validation;
 
-namespace SkyRoute.Core.Services;
+namespace SkyRoute.Core.Features.Flights.SearchFlights;
 
 public interface ISearchFlightService
 {

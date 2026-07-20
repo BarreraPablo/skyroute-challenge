@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using SkyRoute.Contracts.Flights;
-using SkyRoute.Contracts.Validation;
-using SkyRoute.Core.Services;
+using SkyRoute.Core.Features.Flights.SearchFlights;
+using SkyRoute.Core.Models.Validation;
 
 namespace SkyRoute.Api.Controllers;
 
