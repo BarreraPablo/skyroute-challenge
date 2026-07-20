@@ -37,6 +37,11 @@ Open a terminal and navigate to the backend API folder:
 ```bash
 cd backend/src/SkyRoute.Api
 ```
+On the first run, the database will be empty and the schema must be created before starting the API. From the same folder, apply the initial EF Core migration once:
+
+```bash
+dotnet ef database update --project ../SkyRoute.Infrastructure --startup-project .
+```
 Restore dependencies and run the application:
 ```bash
 dotnet restore
