@@ -4,7 +4,7 @@
 SkyRoute is a travel aggregator platform that allows users to search, compare, and book flights. This repository contains the Flight Search & Booking module, built as a full-stack application. The solution integrates simulated airline providers (GlobalAir and BudgetWings) and calculates dynamic pricing based on specific provider rules.
 
 ## 🚀 Tech Stack
-- **Backend:** .NET 10, C#
+- **Backend:** .NET 10, C#, SQL Server
 - **Frontend:** Angular 22, TypeScript, SCSS
 - **Architecture:** Clean Architecture principles (Backend), Vertical Slice Architecture (Backend), Standalone Components (Angular)
 
@@ -12,8 +12,23 @@ SkyRoute is a travel aggregator platform that allows users to search, compare, a
 
 ### Prerequisites
 - [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
-- [Node.js](https://nodejs.org/) (v20.19.0 or higher)
+- [Node.js](https://nodejs.org/) (v22.17.1 or higher)
 - [Angular CLI](https://angular.io/cli)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) or any Docker-compatible runtime
+
+### Start the infrastructure
+
+From the repository root, start the SQL Server container with Docker Compose:
+
+```bash
+docker compose up -d
+```
+
+This brings up the local database used by the backend. To stop and remove the container later, run:
+
+```bash
+docker compose down
+```
 
 ### Running the Backend
 
@@ -30,7 +45,7 @@ dotnet run
 
 The API will be available at http://localhost:5000 (or the port specified in your console). You can access the Swagger UI at http://localhost:5000/swagger.
 
-Running the Frontend
+### Running the Frontend
 
 Open a new terminal and navigate to the frontend folder:
 ```bash
@@ -47,6 +62,12 @@ npm start
 
 Open your browser and navigate to http://localhost:4200.
 
+### Recommended local startup order
+
+1. Start the SQL Server container with `docker compose up -d`.
+2. Run the backend API with `dotnet run` from `backend/src/SkyRoute.Api`.
+3. Run the frontend with `npm start` from `frontend`.
+
 ## 🏗️ Architecture & Design Decisions
 
 ### Backend: Strategy Pattern for Pricing
@@ -56,6 +77,10 @@ To ensure the system is highly scalable and adheres to the Open/Closed Principle
 - Instead of using complex if/else statements for each airline provider, GlobalAirPricingStrategy and BudgetWingsPricingStrategy classes were created.
 
 - When a new provider needs to be added to the platform, we simply create a new strategy class without modifying the core domain logic.
+
+### Backend: Relational Storage for Booking Snapshots
+
+Although a document database would be a natural fit for immutable booking snapshots with minimal relational complexity, SQL Server and EF Core were chosen for this challenge to demonstrate a standard relational integration, typed persistence, and a schema that is easy to evolve.
 
 ### Frontend: Modern Angular Practices
 
@@ -71,9 +96,14 @@ Due to the estimated time constraint of the challenge (3-4 hours), the following
 
 - **Data Persistence**: The current implementation uses in-memory mocked data for the flight providers. However, the IFlightProvider interface was designed so that it can easily be swapped with a real HttpClient implementation in the future.
 
-- **Database**: A relational database (e.g., SQL Server with Entity Framework Core) was not configured. The booking flow returns a generated reference code, but state is not persisted across application restarts.
-
 - **Authentication**: Security/Auth layers were intentionally omitted to focus on the core business logic of the search and pricing algorithms.
+
+### Domain assumptions
+
+- The airport entity does not belong to the domain of this application, so airport data is handled as reference data rather than as a first-class business aggregate.
+- The application does not require user login. It collects passenger details only at booking time.
+- The database schema allows multiple passengers per booking so the model can grow later, even though the current UI captures only one passenger.
+- DocumentType is implemented as an enum because it currently has only two stable values: Passport and NationalId.
 
 ## 📁 Project Structure
 
@@ -89,8 +119,7 @@ skyroute-challenge/
 │   ├── SkyRoute.sln
 │   ├── src/
 │   │   ├── SkyRoute.Api/            # Minimal Controllers, Program.cs, and Dependency Injection setup
-│   │   ├── SkyRoute.Contracts/      # Requests, Responses, and DTOs (Zero external dependencies)
-│   │   ├── SkyRoute.Core/           # Domain Entities, Interfaces, and Vertical Slice Services
+│   │   ├── SkyRoute.Core/           # Domain Entities, Interfaces, Vertical Slice Services, Requests, Responses, and DTOs (Zero external dependencies)
 │   │   └── SkyRoute.Infrastructure/ # EF Core DbContext, Migrations, and Mock Providers
 │   └── tests/
 │       └── SkyRoute.Core.Tests/     # Unit tests for Pricing Strategies and Business Logic
