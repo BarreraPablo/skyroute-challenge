@@ -7,7 +7,7 @@ public class BudgetWingsSearchResponse
 
 public class BudgetWingsOffer
 {
-    public Guid FlightGuid { get; set; }
+    public int FlightGuid { get; set; }
 
     public required string FromCode { get; set; }
 

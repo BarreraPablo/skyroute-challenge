@@ -19,7 +19,7 @@ public class BudgetWingsProxy : IBudgetWingsProxy
         var allFlights = new List<BudgetWingsOffer>
         {
             CreateOffer(
-                Guid.Parse("a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
+                13331,
                 request,
                 departureDate,
                 "Economy",
@@ -28,7 +28,7 @@ public class BudgetWingsProxy : IBudgetWingsProxy
                 18,
                 9),
             CreateOffer(
-                Guid.Parse("b2c3d4e5-f6a7-8901-bcde-f12345678901"),
+                14421,
                 request,
                 departureDate,
                 "First Class",
@@ -76,7 +76,7 @@ public class BudgetWingsProxy : IBudgetWingsProxy
         var allFlights = new List<BudgetWingsOffer>
         {
             CreateOffer(
-                Guid.Parse("a1b2c3d4-e5f6-7890-abcd-ef1234567890"),
+                13331,
                 request,
                 departureDate,
                 "Economy",
@@ -85,7 +85,7 @@ public class BudgetWingsProxy : IBudgetWingsProxy
                 18,
                 9),
             CreateOffer(
-                Guid.Parse("b2c3d4e5-f6a7-8901-bcde-f12345678901"),
+                14421,
                 request,
                 departureDate,
                 "First Class",
@@ -121,7 +121,7 @@ public class BudgetWingsProxy : IBudgetWingsProxy
     }
 
     private static BudgetWingsOffer CreateOffer(
-        Guid flightGuid,
+        int flightGuid,
         SearchFlightRequest request,
         DateTime departureDate,
         string classType,
