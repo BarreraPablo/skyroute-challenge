@@ -98,6 +98,8 @@ Due to the estimated time constraint of the challenge (3-4 hours), the following
 
 - **Authentication**: Security/Auth layers were intentionally omitted to focus on the core business logic of the search and pricing algorithms.
 
+- **Future improvements**: Given more time, I would add unit tests for all backend classes, API integration tests, comments for all interfaces and DTOs, and unit tests for the frontend.
+
 ### Domain assumptions
 
 - The airport entity does not belong to the domain of this application, so airport data is handled as reference data rather than as a first-class business aggregate.
