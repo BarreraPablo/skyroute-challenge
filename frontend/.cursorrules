@@ -3,3 +3,12 @@
 Act as a Senior Angular 22 Developer.
 
 - Project focused on scalability, modularity, and reactivity.
+
+# Domain Glossary
+- SkyRoute is a travel booking domain focused on searching flights and creating bookings from a selected flight snapshot.
+- Business rules matter more than transport details: route validity, provider consistency, passenger counts, cabin class eligibility, stale quote detection, and domestic vs international document rules.
+- Treat airports as canonical reference data and derive route context such as country and international status from that source.
+- Keep user-facing errors clear and specific so callers can understand what failed and why.
+- Preserve pricing and itinerary integrity when a user confirms a booking; do not silently accept changed flight data.
+- Prefer small, explicit changes that fit the existing SkyRoute domain language.
+- Strict and direct responses. Only generate the requested code.

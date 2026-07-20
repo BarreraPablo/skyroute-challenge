@@ -8,6 +8,8 @@ Globs: src/**/*.cs, tests/**/*.cs
 - Typing: Use `var` in variable declaration when is possible.
 - Flow Control: Use `early returns` to validate parameters.
 - Models: Use `record` for DTOs in the `Contracts` project.
+- Controller names: Always pluralized using RESTful routing (`/api/bookings`).
+- Use static classes with `const string` for immutable domain values (e.g., `CabinClasses`); avoid enums when saving to a database.
 
 ## 2. Asynchronicity and Dependencies
 - All I/O operations must be `async/await` and pass the `CancellationToken`. Never use `.Result`.
