@@ -1,0 +1,48 @@
+@use "./variables" as *;
+
+// Generic panel wrapper for cards/panels
+@mixin panel($padding: 28px, $radius: $radius-lg, $bg: $color-surface, $border: $color-border, $shadow: $shadow-lg, $backdrop: true) {
+  padding: $padding;
+  border: 1px solid $border;
+  border-radius: $radius;
+  background: $bg;
+  @if $backdrop {
+    backdrop-filter: blur(14px);
+  }
+  box-shadow: $shadow;
+}
+
+// Smaller card used for compact blocks
+@mixin card($padding: 18px 20px, $radius: $radius-md, $bg: $color-surface-strong) {
+  padding: $padding;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  background: $bg;
+}
+
+// Primary rounded button style
+@mixin btn-primary($from: $color-brand, $to: $color-brand-strong) {
+  border: 0;
+  border-radius: 999px;
+  padding: 13px 18px;
+  color: white;
+  background: linear-gradient(135deg, $from, $to);
+  cursor: pointer;
+}
+
+// Form control (input/select) baseline
+@mixin form-control($radius: $radius-sm, $padding: 12px 14px, $bg: $color-surface-strong) {
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  padding: $padding;
+  background: $bg;
+  color: $color-text;
+}
+
+// Generic status message wrapper
+@mixin status-message($padding: 18px 20px, $radius: $radius-md, $bg: $color-surface-strong, $color: $color-text-muted) {
+  padding: $padding;
+  border-radius: $radius;
+  background: $bg;
+  color: $color;
+}

@@ -1,4 +1,4 @@
-@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
 
 .shell {
   min-height: 100vh;
@@ -16,13 +16,8 @@
   align-items: end;
   justify-content: space-between;
   gap: 24px;
-  padding: 24px 28px;
+  @include panel(24px 28px);
   margin-bottom: 28px;
-  border: 1px solid $color-border;
-  border-radius: $radius-lg;
-  background: $color-surface;
-  backdrop-filter: blur(14px);
-  box-shadow: $shadow-lg;
 }
 
 .eyebrow {

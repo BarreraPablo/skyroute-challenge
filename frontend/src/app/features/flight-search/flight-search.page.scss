@@ -1,13 +1,8 @@
-@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
 
 .page-hero,
 .results-panel {
-  padding: 28px;
-  border: 1px solid $color-border;
-  border-radius: $radius-lg;
-  background: $color-surface;
-  backdrop-filter: blur(14px);
-  box-shadow: $shadow-lg;
+  @include panel();
 }
 
 .page-hero {

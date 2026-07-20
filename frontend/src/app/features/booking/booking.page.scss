@@ -1,16 +1,11 @@
-@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
 
 .booking-layout,
 .booking-empty-state {
   display: grid;
   gap: 24px;
   grid-template-columns: 0.95fr 1.05fr;
-  padding: 28px;
-  border: 1px solid $color-border;
-  border-radius: $radius-lg;
-  background: $color-surface;
-  backdrop-filter: blur(14px);
-  box-shadow: $shadow-lg;
+  @include panel();
 }
 
 .booking-layout {
@@ -53,10 +48,7 @@ h2 {
 .summary-card {
   display: grid;
   gap: 12px;
-  padding: 18px;
-  border: 1px solid $color-border;
-  border-radius: $radius-md;
-  background: $color-surface-strong;
+  @include card();
 }
 
 .summary-card--accent {
@@ -146,11 +138,7 @@ h2 {
   width: min(100%, 520px);
   display: grid;
   gap: 16px;
-  padding: 28px;
-  border: 1px solid $color-border;
-  border-radius: $radius-lg;
-  background: $color-surface;
-  box-shadow: $shadow-lg;
+  @include panel();
 }
 
 .booking-modal__copy {
