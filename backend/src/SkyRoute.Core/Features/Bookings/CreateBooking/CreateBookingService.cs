@@ -15,7 +15,7 @@ public class CreateBookingService : ICreateBookingService
     private const decimal PriceTolerance = 0.01m;
     private const int BookingReferenceSuffixLength = 8;
 
-    private readonly IReadOnlyList<IFlightProviderExternalService> _flightProviders;
+    private readonly IReadOnlyDictionary<string, IFlightProviderExternalService> _flightProviders;
     private readonly IBookingRepository _bookingRepository;
     private readonly IAirportReferenceService _airportReferenceService;
 
@@ -24,7 +24,10 @@ public class CreateBookingService : ICreateBookingService
         IBookingRepository bookingRepository,
         IAirportReferenceService airportReferenceService)
     {
-        _flightProviders = flightProviders.ToList();
+        _flightProviders = flightProviders
+            .Where(provider => !string.IsNullOrWhiteSpace(provider.ProviderName))
+            .GroupBy(provider => provider.ProviderName, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
         _bookingRepository = bookingRepository;
         _airportReferenceService = airportReferenceService;
     }
@@ -68,8 +71,11 @@ public class CreateBookingService : ICreateBookingService
     }
 
     private IFlightProviderExternalService? ResolveProvider(string providerName) =>
-        _flightProviders.FirstOrDefault(item =>
-            item.ProviderName.Equals(providerName, StringComparison.OrdinalIgnoreCase));
+        string.IsNullOrWhiteSpace(providerName)
+            ? null
+            : _flightProviders.TryGetValue(providerName, out var provider)
+                ? provider
+                : null;
 
     private async Task<FlightResponse?> GetCurrentFlightAsync(
         IFlightProviderExternalService provider,
