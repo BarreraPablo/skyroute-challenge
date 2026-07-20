@@ -45,6 +45,8 @@ dotnet run
 
 The API will be available at http://localhost:5000 (or the port specified in your console). You can access the Swagger UI at http://localhost:5000/swagger.
 
+For this challenge only, the appsettings.Development.json file is included in version control with the local LocalDB connection string solely to facilitate and expedite evaluation. In a real production environment, this sensitive configuration would be handled through User Secrets in development and Azure Key Vault, or environment variables, in higher-level environments.
+
 ### Running the Frontend
 
 Open a new terminal and navigate to the frontend folder:
