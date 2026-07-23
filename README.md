@@ -77,7 +77,7 @@ Open your browser and navigate to http://localhost:4200.
 
 ## 🏗️ Architecture & Design Decisions
 
-### Backend: Strategy Pattern for Pricing
+### Backend: Strategy Pattern for flights
 
 To ensure the system is highly scalable and adheres to the Open/Closed Principle (SOLID), the flight retrieval  logic was implemented using the Strategy Pattern.
 

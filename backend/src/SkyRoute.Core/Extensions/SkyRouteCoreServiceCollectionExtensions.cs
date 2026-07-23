@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using SkyRoute.Core.ExternalServices;
+using SkyRoute.Core.ExternalServices.ArcticAir;
 using SkyRoute.Core.ExternalServices.BudgetWings;
 using SkyRoute.Core.ExternalServices.GlobalAir;
 using SkyRoute.Core.Features.Bookings.CreateBooking;
@@ -14,8 +15,11 @@ public static class SkyRouteCoreServiceCollectionExtensions
     {
         services.AddSingleton<IGlobalAirPricingService, GlobalAirPricingService>();
         services.AddSingleton<IBudgetWingsPricingService, BudgetWingsPricingService>();
+        services.AddSingleton<IArcticAirPricingService, ArcticAirPricingService>();
+
         services.AddSingleton<IFlightProviderExternalServiceStrategy, GlobalAirExternalServiceStrategy>();
         services.AddSingleton<IFlightProviderExternalServiceStrategy, BudgetWingsExternalServiceStrategy>();
+        services.AddSingleton<IFlightProviderExternalServiceStrategy, ArcticAirExternalServiceStrategy>();
         services.AddSingleton<IAirportReferenceService, AirportReferenceService>();
         services.AddSingleton<ISearchFlightValidationService, SearchFlightValidationService>();
         services.AddSingleton<ISearchFlightService, SearchFlightService>();
