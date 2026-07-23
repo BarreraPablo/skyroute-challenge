@@ -12,12 +12,14 @@ public static class SkyRouteCoreServiceCollectionExtensions
 {
     public static IServiceCollection AddSkyRouteCore(this IServiceCollection services)
     {
-        services.AddSingleton<IGlobalAirPricingStrategy, GlobalAirPricingStrategy>();
-        services.AddSingleton<IBudgetWingsPricingStrategy, BudgetWingsPricingStrategy>();
-        services.AddSingleton<IFlightProviderExternalService, GlobalAirService>();
-        services.AddSingleton<IFlightProviderExternalService, BudgetWingsExternalService>();
+        services.AddSingleton<IGlobalAirPricingService, GlobalAirPricingService>();
+        services.AddSingleton<IBudgetWingsPricingService, BudgetWingsPricingService>();
+        services.AddSingleton<IFlightProviderExternalServiceStrategy, GlobalAirExternalServiceStrategy>();
+        services.AddSingleton<IFlightProviderExternalServiceStrategy, BudgetWingsExternalServiceStrategy>();
         services.AddSingleton<IAirportReferenceService, AirportReferenceService>();
+        services.AddSingleton<ISearchFlightValidationService, SearchFlightValidationService>();
         services.AddSingleton<ISearchFlightService, SearchFlightService>();
+        services.AddScoped<ICreateBookingValidationService, CreateBookingValidationService>();
         services.AddScoped<ICreateBookingService, CreateBookingService>();
 
         return services;

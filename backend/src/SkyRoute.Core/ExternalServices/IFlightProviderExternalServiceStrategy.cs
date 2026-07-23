@@ -2,7 +2,7 @@ using SkyRoute.Core.Models;
 
 namespace SkyRoute.Core.ExternalServices;
 
-public interface IFlightProviderExternalService
+public interface IFlightProviderExternalServiceStrategy
 {
     string ProviderName { get; }
 

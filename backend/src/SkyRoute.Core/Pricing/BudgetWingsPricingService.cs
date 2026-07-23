@@ -1,6 +1,6 @@
 namespace SkyRoute.Core.Pricing;
 
-public class BudgetWingsPricingStrategy : IBudgetWingsPricingStrategy
+public class BudgetWingsPricingService : IBudgetWingsPricingService
 {
     private const decimal PromotionalDiscountRate = 0.10m;
     private const decimal MinimumPrice = 29.99m;

@@ -1,6 +1,6 @@
 namespace SkyRoute.Core.Pricing;
 
-public class GlobalAirPricingStrategy : IGlobalAirPricingStrategy
+public class GlobalAirPricingService : IGlobalAirPricingService
 {
     private const decimal FuelSurchargeRate = 0.15m;
 

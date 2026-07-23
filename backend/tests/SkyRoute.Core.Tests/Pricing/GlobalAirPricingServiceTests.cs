@@ -3,14 +3,14 @@ using SkyRoute.Core.Pricing;
 namespace SkyRoute.Core.Tests.Pricing;
 
 [TestFixture]
-public class GlobalAirPricingStrategyTests
+public class GlobalAirPricingServiceTests
 {
-    private GlobalAirPricingStrategy _sut = null!;
+    private GlobalAirPricingService _sut = null!;
 
     [SetUp]
     public void SetUp()
     {
-        _sut = new GlobalAirPricingStrategy();
+        _sut = new GlobalAirPricingService();
     }
 
     [Test]

@@ -13,7 +13,7 @@ namespace SkyRoute.Core.Tests.Features.Bookings.CreateBooking;
 [TestFixture]
 public class CreateBookingServiceTests
 {
-    private Mock<IFlightProviderExternalService> _providerMock = null!;
+    private Mock<IFlightProviderExternalServiceStrategy> _providerMock = null!;
     private Mock<IBookingRepository> _bookingRepositoryMock = null!;
     private AirportReferenceService _airportReferenceService = null!;
     private CreateBookingService _sut = null!;
@@ -21,7 +21,7 @@ public class CreateBookingServiceTests
     [SetUp]
     public void SetUp()
     {
-        _providerMock = new Mock<IFlightProviderExternalService>();
+        _providerMock = new Mock<IFlightProviderExternalServiceStrategy>();
         _providerMock.Setup(provider => provider.ProviderName).Returns("BudgetWings");
         _bookingRepositoryMock = new Mock<IBookingRepository>();
         _airportReferenceService = new AirportReferenceService();
@@ -29,7 +29,8 @@ public class CreateBookingServiceTests
         _sut = new CreateBookingService(
             [_providerMock.Object],
             _bookingRepositoryMock.Object,
-            _airportReferenceService);
+            _airportReferenceService,
+            new CreateBookingValidationService(_airportReferenceService));
     }
 
     [Test]

@@ -10,16 +10,16 @@ namespace SkyRoute.Core.Tests.Features.Flights.SearchFlights;
 [TestFixture]
 public class SearchFlightServiceTests
 {
-    private Mock<IFlightProviderExternalService> _providerOneMock = null!;
-    private Mock<IFlightProviderExternalService> _providerTwoMock = null!;
+    private Mock<IFlightProviderExternalServiceStrategy> _providerOneMock = null!;
+    private Mock<IFlightProviderExternalServiceStrategy> _providerTwoMock = null!;
     private Mock<IAirportReferenceService> _airportReferenceServiceMock = null!;
     private SearchFlightService _sut = null!;
 
     [SetUp]
     public void SetUp()
     {
-        _providerOneMock = new Mock<IFlightProviderExternalService>();
-        _providerTwoMock = new Mock<IFlightProviderExternalService>();
+        _providerOneMock = new Mock<IFlightProviderExternalServiceStrategy>();
+        _providerTwoMock = new Mock<IFlightProviderExternalServiceStrategy>();
         _airportReferenceServiceMock = new Mock<IAirportReferenceService>();
 
         _airportReferenceServiceMock
@@ -28,7 +28,7 @@ public class SearchFlightServiceTests
 
         _sut = new SearchFlightService(
             [_providerOneMock.Object, _providerTwoMock.Object],
-            _airportReferenceServiceMock.Object);
+            new SearchFlightValidationService(_airportReferenceServiceMock.Object));
     }
 
     [Test]

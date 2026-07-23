@@ -8,18 +8,18 @@ using SkyRoute.Core.Pricing;
 namespace SkyRoute.Core.Tests.ExternalServices.BudgetWings;
 
 [TestFixture]
-public class BudgetWingsExternalServiceTests
+public class BudgetWingsExternalServiceStrategyTests
 {
     private Mock<IBudgetWingsProxy> _proxyMock = null!;
-    private Mock<IBudgetWingsPricingStrategy> _pricingStrategyMock = null!;
-    private BudgetWingsExternalService _sut = null!;
+    private Mock<IBudgetWingsPricingService> _pricingServiceMock = null!;
+    private BudgetWingsExternalServiceStrategy _sut = null!;
 
     [SetUp]
     public void SetUp()
     {
         _proxyMock = new Mock<IBudgetWingsProxy>();
-        _pricingStrategyMock = new Mock<IBudgetWingsPricingStrategy>();
-        _sut = new BudgetWingsExternalService(_proxyMock.Object, _pricingStrategyMock.Object);
+        _pricingServiceMock = new Mock<IBudgetWingsPricingService>();
+        _sut = new BudgetWingsExternalServiceStrategy(_proxyMock.Object, _pricingServiceMock.Object);
     }
 
     [Test]
@@ -41,8 +41,8 @@ public class BudgetWingsExternalServiceTests
             .Setup(proxy => proxy.SearchFlightsAsync(request, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new BudgetWingsSearchResponse { Flights = [offer] });
 
-        _pricingStrategyMock
-            .Setup(strategy => strategy.Calculate(offer.UnitPrice, request.NumberOfPassengers))
+        _pricingServiceMock
+            .Setup(service => service.Calculate(offer.UnitPrice, request.NumberOfPassengers))
             .Returns(pricing);
 
         // Act
@@ -60,8 +60,8 @@ public class BudgetWingsExternalServiceTests
         _proxyMock.Verify(
             proxy => proxy.SearchFlightsAsync(request, It.IsAny<CancellationToken>()),
             Times.Once);
-        _pricingStrategyMock.Verify(
-            strategy => strategy.Calculate(offer.UnitPrice, request.NumberOfPassengers),
+        _pricingServiceMock.Verify(
+            service => service.Calculate(offer.UnitPrice, request.NumberOfPassengers),
             Times.Once);
     }
 
@@ -78,8 +78,8 @@ public class BudgetWingsExternalServiceTests
             .Setup(proxy => proxy.GetFlightByIdAsync(flightId, request, It.IsAny<CancellationToken>()))
             .ReturnsAsync(offer);
 
-        _pricingStrategyMock
-            .Setup(strategy => strategy.Calculate(offer.UnitPrice, request.NumberOfPassengers))
+        _pricingServiceMock
+            .Setup(service => service.Calculate(offer.UnitPrice, request.NumberOfPassengers))
             .Returns(pricing);
 
         // Act
@@ -111,8 +111,8 @@ public class BudgetWingsExternalServiceTests
 
         // Assert
         Assert.That(result, Is.Null);
-        _pricingStrategyMock.Verify(
-            strategy => strategy.Calculate(It.IsAny<decimal>(), It.IsAny<int>()),
+        _pricingServiceMock.Verify(
+            service => service.Calculate(It.IsAny<decimal>(), It.IsAny<int>()),
             Times.Never);
     }
 

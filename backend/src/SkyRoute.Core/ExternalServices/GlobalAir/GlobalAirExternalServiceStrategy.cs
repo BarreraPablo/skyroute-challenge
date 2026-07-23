@@ -4,17 +4,17 @@ using SkyRoute.Core.Pricing;
 
 namespace SkyRoute.Core.ExternalServices.GlobalAir;
 
-public class GlobalAirService : IFlightProviderExternalService
+public class GlobalAirExternalServiceStrategy : IFlightProviderExternalServiceStrategy
 {
     private readonly IGlobalAirProxy _proxy;
-    private readonly IFlightPricingStrategy _pricingStrategy;
+    private readonly IFlightPricingService _pricingService;
 
     public string ProviderName => "GlobalAir";
 
-    public GlobalAirService(IGlobalAirProxy proxy, IGlobalAirPricingStrategy pricingStrategy)
+    public GlobalAirExternalServiceStrategy(IGlobalAirProxy proxy, IGlobalAirPricingService pricingService)
     {
         _proxy = proxy;
-        _pricingStrategy = pricingStrategy;
+        _pricingService = pricingService;
     }
 
     public async Task<IReadOnlyList<FlightResponse>> SearchFlightsAsync(
@@ -45,7 +45,7 @@ public class GlobalAirService : IFlightProviderExternalService
 
     private FlightResponse MapToFlightResponse(GlobalAirLeg leg, int numberOfPassengers)
     {
-        var pricing = _pricingStrategy.Calculate(leg.Fare.PricePerPax, numberOfPassengers);
+        var pricing = _pricingService.Calculate(leg.Fare.PricePerPax, numberOfPassengers);
 
         return new()
         {

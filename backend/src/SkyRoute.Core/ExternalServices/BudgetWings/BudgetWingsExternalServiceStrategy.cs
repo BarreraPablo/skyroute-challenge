@@ -4,17 +4,17 @@ using SkyRoute.Core.Pricing;
 
 namespace SkyRoute.Core.ExternalServices.BudgetWings;
 
-public class BudgetWingsExternalService : IFlightProviderExternalService
+public class BudgetWingsExternalServiceStrategy : IFlightProviderExternalServiceStrategy
 {
     private readonly IBudgetWingsProxy _proxy;
-    private readonly IFlightPricingStrategy _pricingStrategy;
+    private readonly IFlightPricingService _pricingService;
 
     public string ProviderName => "BudgetWings";
 
-    public BudgetWingsExternalService(IBudgetWingsProxy proxy, IBudgetWingsPricingStrategy pricingStrategy)
+    public BudgetWingsExternalServiceStrategy(IBudgetWingsProxy proxy, IBudgetWingsPricingService pricingService)
     {
         _proxy = proxy;
-        _pricingStrategy = pricingStrategy;
+        _pricingService = pricingService;
     }
 
     public async Task<IReadOnlyList<FlightResponse>> SearchFlightsAsync(
@@ -45,7 +45,7 @@ public class BudgetWingsExternalService : IFlightProviderExternalService
 
     private FlightResponse MapToFlightResponse(BudgetWingsOffer offer, int numberOfPassengers)
     {
-        var pricing = _pricingStrategy.Calculate(offer.UnitPrice, numberOfPassengers);
+        var pricing = _pricingService.Calculate(offer.UnitPrice, numberOfPassengers);
 
         return new()
         {

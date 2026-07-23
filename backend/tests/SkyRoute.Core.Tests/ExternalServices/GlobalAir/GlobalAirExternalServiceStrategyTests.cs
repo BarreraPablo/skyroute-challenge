@@ -7,18 +7,18 @@ using SkyRoute.Core.Pricing;
 namespace SkyRoute.Core.Tests.ExternalServices.GlobalAir;
 
 [TestFixture]
-public class GlobalAirServiceTests
+public class GlobalAirExternalServiceStrategyTests
 {
     private Mock<IGlobalAirProxy> _proxyMock = null!;
-    private Mock<IGlobalAirPricingStrategy> _pricingStrategyMock = null!;
-    private GlobalAirService _sut = null!;
+    private Mock<IGlobalAirPricingService> _pricingServiceMock = null!;
+    private GlobalAirExternalServiceStrategy _sut = null!;
 
     [SetUp]
     public void SetUp()
     {
         _proxyMock = new Mock<IGlobalAirProxy>();
-        _pricingStrategyMock = new Mock<IGlobalAirPricingStrategy>();
-        _sut = new GlobalAirService(_proxyMock.Object, _pricingStrategyMock.Object);
+        _pricingServiceMock = new Mock<IGlobalAirPricingService>();
+        _sut = new GlobalAirExternalServiceStrategy(_proxyMock.Object, _pricingServiceMock.Object);
     }
 
     [Test]
@@ -40,8 +40,8 @@ public class GlobalAirServiceTests
             .Setup(proxy => proxy.SearchFlightsAsync(request, It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GlobalAirAvailabilityResponse { Results = [leg] });
 
-        _pricingStrategyMock
-            .Setup(strategy => strategy.Calculate(leg.Fare.PricePerPax, request.NumberOfPassengers))
+        _pricingServiceMock
+            .Setup(service => service.Calculate(leg.Fare.PricePerPax, request.NumberOfPassengers))
             .Returns(pricing);
 
         // Act
@@ -59,8 +59,8 @@ public class GlobalAirServiceTests
         _proxyMock.Verify(
             proxy => proxy.SearchFlightsAsync(request, It.IsAny<CancellationToken>()),
             Times.Once);
-        _pricingStrategyMock.Verify(
-            strategy => strategy.Calculate(leg.Fare.PricePerPax, request.NumberOfPassengers),
+        _pricingServiceMock.Verify(
+            service => service.Calculate(leg.Fare.PricePerPax, request.NumberOfPassengers),
             Times.Once);
     }
 
@@ -77,8 +77,8 @@ public class GlobalAirServiceTests
             .Setup(proxy => proxy.GetFlightByIdAsync(flightId, request, It.IsAny<CancellationToken>()))
             .ReturnsAsync(leg);
 
-        _pricingStrategyMock
-            .Setup(strategy => strategy.Calculate(leg.Fare.PricePerPax, request.NumberOfPassengers))
+        _pricingServiceMock
+            .Setup(service => service.Calculate(leg.Fare.PricePerPax, request.NumberOfPassengers))
             .Returns(pricing);
 
         // Act
@@ -110,8 +110,8 @@ public class GlobalAirServiceTests
 
         // Assert
         Assert.That(result, Is.Null);
-        _pricingStrategyMock.Verify(
-            strategy => strategy.Calculate(It.IsAny<decimal>(), It.IsAny<int>()),
+        _pricingServiceMock.Verify(
+            service => service.Calculate(It.IsAny<decimal>(), It.IsAny<int>()),
             Times.Never);
     }
 

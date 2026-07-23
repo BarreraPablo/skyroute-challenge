@@ -79,9 +79,9 @@ Open your browser and navigate to http://localhost:4200.
 
 ### Backend: Strategy Pattern for Pricing
 
-To ensure the system is highly scalable and adheres to the Open/Closed Principle (SOLID), the pricing calculation logic was implemented using the Strategy Pattern.
+To ensure the system is highly scalable and adheres to the Open/Closed Principle (SOLID), the flight retrieval  logic was implemented using the Strategy Pattern.
 
-- Instead of using complex if/else statements for each airline provider, GlobalAirPricingStrategy and BudgetWingsPricingStrategy classes were created.
+- Instead of using complex if/else statements for each airline provider, BudgetWingsExternalServiceStrategy and GlobalAirExternalServiceStrategy classes were created.
 
 - When a new provider needs to be added to the platform, we simply create a new strategy class without modifying the core domain logic.
 
